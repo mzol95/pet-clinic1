@@ -1,13 +1,36 @@
 package pl.zoltowskimarcin.java.app.web.model;
 
 import java.time.LocalDate;
-import java.util.List;
+import java.util.Objects;
 
 public class Animal {
 
+    private Long id;
     private String name;
     private LocalDate birthDate;
-    private List<Visit> visitList;
+    // private List<Visit> visitList;
+
+    public Animal() {
+    }
+
+    public Animal(String name, LocalDate birthDate) {
+        this.name = name;
+        this.birthDate = birthDate;
+    }
+
+    public Animal(Long id, String name, LocalDate birthDate) {
+        this.id = id;
+        this.name = name;
+        this.birthDate = birthDate;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
 
     public String getName() {
         return name;
@@ -25,20 +48,25 @@ public class Animal {
         this.birthDate = birthDate;
     }
 
-    public List<Visit> getVisitList() {
-        return visitList;
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Animal animal = (Animal) o;
+        return Objects.equals(id, animal.id);
     }
 
-    public void setVisitList(List<Visit> visitList) {
-        this.visitList = visitList;
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
     }
 
     @Override
     public String toString() {
         return "Animal{" +
-                "name='" + name + '\'' +
+                "id=" + id +
+                ", name='" + name + '\'' +
                 ", birthDate=" + birthDate +
-                ", visitList=" + visitList +
                 '}';
     }
 }
