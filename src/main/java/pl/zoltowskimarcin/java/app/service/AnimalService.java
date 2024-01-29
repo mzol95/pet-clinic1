@@ -15,6 +15,7 @@ public class AnimalService {
         this.animalRepository = animalRepository;
     }
 
+    //todo co z loggerami
     public Animal create(Animal animal) {
         LOGGER.info("create(" + animal + ")");
         Animal createdAnimal = animalRepository.create(animal);
@@ -22,6 +23,7 @@ public class AnimalService {
         return createdAnimal;
     }
 
+    //todo własny wyjątek
     public Animal read(Long id) {
         LOGGER.info("read(id:  " + id + ")");
         Animal recivedAnimal = animalRepository.read(id)

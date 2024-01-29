@@ -24,6 +24,7 @@ public class AnimalRepository {
 
 
     //todo jak pobrać wygenerwoany id
+    //todo wydzielic query do osobnej klasy
     //generowanie identyfikatorów zrealizować za pomocą sekwencji
     public Animal create(Animal animal) {
         LOGGER.info("create(" + animal + ")");
