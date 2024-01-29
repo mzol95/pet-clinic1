@@ -12,17 +12,25 @@ public class AnimalRepository {
 
     private static final Logger LOGGER = Logger.getLogger(AnimalRepository.class.getName());
     private Connection dbConnection;
+    //todo 29.01.2024
+    //1. Stworzyć oddzielną klasę zarządzającą połączeniami z bazą danych -> singleton zwracający połączenie
+    //2. Opcjonalnie zarządzanie pulą połączeń
+    //3. Podpiąć liquibase z tabelami bazy
+    //4. W klasie zarządzającej połączeniem z bazą danych użyć nowej klasy zarządzającej danymi do połączenia się z bazą danych - java Properties
 
     public AnimalRepository(Connection dbConnection) {
         this.dbConnection = dbConnection;
     }
 
+
+    //todo jak pobrać wygenerwoany id
+    //generowanie identyfikatorów zrealizować za pomocą sekwencji
     public Animal create(Animal animal) {
         LOGGER.info("create(" + animal + ")");
 
         String createQuery = "INSERT INTO animal (name, birth_date) VALUES (?, ?)";
 
-        try (PreparedStatement createStatement = dbConnection.prepareStatement(createQuery)) {
+        try (PreparedStatement createStatement = dbConnection.prepareStatement(createQuery, Statement.RETURN_GENERATED_KEYS)) {
             createStatement.setString(1, animal.getName());
             createStatement.setDate(2, Date.valueOf(animal.getBirthDate()));
             createStatement.execute();
@@ -34,6 +42,7 @@ public class AnimalRepository {
         return animal;
     }
 
+    // todo return
     public Optional<Animal> read(Long id) {
         LOGGER.info("read (id: " + id + ")");
 
@@ -62,7 +71,8 @@ public class AnimalRepository {
         return Optional.ofNullable(recivedAnimal);
     }
 
-
+    //todo zmienic na animal
+    //
     public boolean update(Animal animal) {
         LOGGER.info("update (" + animal + ")");
         boolean result = false;
