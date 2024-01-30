@@ -5,6 +5,7 @@ import java.util.Objects;
 
 public class Doctor {
 
+    private Long id;
     private String name;
     private String surname;
     private List<Visit> visitList;

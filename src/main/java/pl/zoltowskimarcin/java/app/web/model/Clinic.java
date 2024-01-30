@@ -4,6 +4,7 @@ import java.util.Set;
 
 public class Clinic {
 
+    private Long id;
     private Set<Doctor> doctorSet;
 
     public Clinic() {

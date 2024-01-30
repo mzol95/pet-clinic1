@@ -4,6 +4,7 @@ import java.time.LocalDateTime;
 
 public class Visit {
 
+    private Long id;
     private LocalDateTime date;
     private Doctor doctor;
     private Animal animal;
