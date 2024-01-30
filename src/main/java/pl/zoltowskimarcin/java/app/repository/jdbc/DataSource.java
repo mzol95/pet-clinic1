@@ -18,8 +18,9 @@ public class DataSource {
 
     static {
         Properties properties = new Properties();
-        try {
-            properties.load(new FileInputStream(appConfigPath));
+
+        try(FileInputStream input = new FileInputStream(appConfigPath)){
+            properties.load(input);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

@@ -34,8 +34,8 @@ public class ConnectionManager {
 
     private void loadProperties() {
         Properties properties = new Properties();
-        try {
-            properties.load(new FileInputStream(appConfigPath));
+        try (FileInputStream input = new FileInputStream(appConfigPath)) {
+            properties.load(input);
             url = properties.getProperty("url");
             user = properties.getProperty("user");
             password = properties.getProperty("password");
