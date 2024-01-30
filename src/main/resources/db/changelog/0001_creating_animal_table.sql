@@ -1,0 +1,14 @@
+
+CREATE SEQUENCE IF NOT EXISTS seq
+    START WITH 1
+    INCREMENT BY 1;
+
+
+
+CREATE TABLE IF NOT EXISTS animal
+(
+    id         BIGINT PRIMARY KEY AUTO_INCREMENT,
+    name       VARCHAR(255) NOT NULL,
+    birth_date DATE         NOT NULL
+);
+
