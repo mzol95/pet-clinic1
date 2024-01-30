@@ -18,9 +18,9 @@ public class AnimalJdbc implements AnimalDao {
 
     //todo 29.01.2024
     //todo 1. Stworzyć oddzielną klasę zarządzającą połączeniami z bazą danych -> singleton zwracający połączenie - done
-    //todo 2. Opcjonalnie zarządzanie pulą połączeń
+    //todo 2. Opcjonalnie zarządzanie pulą połączeń - done
     //todo 3. Podpiąć liquibase z tabelami bazy
-    //todo 4. W klasie zarządzającej połączeniem z bazą danych użyć nowej klasy zarządzającej danymi do połączenia się z bazą danych - java Properties
+    //todo 4. W klasie zarządzającej połączeniem z bazą danych użyć nowej klasy zarządzającej danymi do połączenia się z bazą danych - java Properties - done
 
     public AnimalJdbc(Connection dbConnection) {
         this.dbConnection = dbConnection;
