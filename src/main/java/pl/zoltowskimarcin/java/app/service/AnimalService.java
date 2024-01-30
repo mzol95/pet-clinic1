@@ -4,7 +4,6 @@ import pl.zoltowskimarcin.java.app.exceptions.EntityNotFoundException;
 import pl.zoltowskimarcin.java.app.repository.AnimalDao;
 import pl.zoltowskimarcin.java.app.web.model.Animal;
 
-import java.util.NoSuchElementException;
 import java.util.logging.Logger;
 
 public class AnimalService {
@@ -33,16 +32,15 @@ public class AnimalService {
         return recivedAnimal;
     }
 
-//    public boolean update(Animal animal) {
-//        boolean result = false;
-//        LOGGER.info("update(" + animal + ")");
-//        result = animalDao.update(animal);
-//        LOGGER.info("update(...) " + (result ? "succeed" : "not succeed"));
-//        return result;
-//    }
+    public Animal update(Animal animal) {
+        LOGGER.info("update(" + animal + ")");
+        Animal resultAnimal = animalDao.update(animal);
+        LOGGER.info("update(...) succeed");
+        return resultAnimal;
+    }
 
     public boolean delete(Long id) {
-        boolean result = false;
+        boolean result;
         LOGGER.info("delete(id: " + id + ")");
         result = animalDao.delete(id);
         LOGGER.info("delete(...) " + (result ? "succeed" : "not succeed"));

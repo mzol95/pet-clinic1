@@ -30,12 +30,12 @@ public class AnimalController {
     }
 
 
-//    public boolean update(Animal animal) {
-//        LOGGER.info("update(id: " + animal.getId() + ")");
-//        boolean result = animalService.update(animal);
-//        LOGGER.info("update(...) " + (result ? "succeed" : "not succeed"));
-//        return false;
-//    }
+    public Animal update(Animal animal) {
+        LOGGER.info("update(id: " + animal.getId() + ")");
+        Animal resultAnimal = animalService.update(animal);
+        LOGGER.info("update(...) succeed");
+        return resultAnimal;
+    }
 
 
     public boolean delete(Long id) {
