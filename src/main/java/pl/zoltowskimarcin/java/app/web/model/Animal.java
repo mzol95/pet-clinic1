@@ -18,12 +18,6 @@ public class Animal {
         this.birthDate = birthDate;
     }
 
-    public Animal(Long id, String name, LocalDate birthDate) {
-        this.id = id;
-        this.name = name;
-        this.birthDate = birthDate;
-    }
-
     public Long getId() {
         return id;
     }

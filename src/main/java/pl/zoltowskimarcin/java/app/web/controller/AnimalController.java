@@ -30,12 +30,12 @@ public class AnimalController {
     }
 
 
-    public boolean update(Animal animal) {
-        LOGGER.info("update(id: " + animal.getId() + ")");
-        boolean result = animalService.update(animal);
-        LOGGER.info("update(...) " + (result ? "succeed" : "not succeed"));
-        return false;
-    }
+//    public boolean update(Animal animal) {
+//        LOGGER.info("update(id: " + animal.getId() + ")");
+//        boolean result = animalService.update(animal);
+//        LOGGER.info("update(...) " + (result ? "succeed" : "not succeed"));
+//        return false;
+//    }
 
 
     public boolean delete(Long id) {
@@ -46,7 +46,7 @@ public class AnimalController {
     }
 
 
-    //todo 25.01.2024
+    //todo 25.01.2024 - done
     /*
      * stworzyć metody crud z logerami
      * dla każdej metody stworzyć testy jednostkowe oraz DID
