@@ -39,22 +39,4 @@ class AnimalTest {
         Assertions.assertEquals(ANIMAL_BIRTHDAY_01_01_2000, animalBirthday, "Animal birthday dates doesn't match");
 
     }
-
-    @Test
-    void visits_list_size_for_animal_is_2() {
-        //given
-        Animal animal = new Animal();
-        Visit visit1 = new Visit();
-        Visit visit2 = new Visit();
-        List<Visit> visitList = List.of(visit1, visit2);
-
-
-        //when
-//        animal.setVisitList(visitList);
-//        int actualListSize = animal.getVisitList().size();
-
-        //then
-//        Assertions.assertEquals(ANIMAL_VISIT_LIST_SIZE, actualListSize, "List size doesn't match");
-
-    }
 }

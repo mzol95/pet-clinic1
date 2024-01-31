@@ -19,7 +19,6 @@ class AnimalJdbcTest {
     private static final String ANIMAL_NAME = "Dog";
     private static final LocalDate ANIMAL_BIRTH_DATE = LocalDate.of(2000, 1, 1);
 
-
     private static Connection connection;
 
     @BeforeEach

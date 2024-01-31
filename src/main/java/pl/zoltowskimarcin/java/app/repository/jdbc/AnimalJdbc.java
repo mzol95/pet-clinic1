@@ -14,16 +14,16 @@ public class AnimalJdbc implements AnimalDao {
 
     private static final Logger LOGGER = Logger.getLogger(AnimalJdbc.class.getName());
 
-    private Connection dbConnection;
+    private Connection connection;
 
     //todo 29.01.2024
     //todo 1. Stworzyć oddzielną klasę zarządzającą połączeniami z bazą danych -> singleton zwracający połączenie - done
     //todo 2. Opcjonalnie zarządzanie pulą połączeń - done
-    //todo 3. Podpiąć liquibase z tabelami bazy
+    //todo 3. Podpiąć liquibase z tabelami bazy - done
     //todo 4. W klasie zarządzającej połączeniem z bazą danych użyć nowej klasy zarządzającej danymi do połączenia się z bazą danych - java Properties - done
 
-    public AnimalJdbc(Connection dbConnection) {
-        this.dbConnection = dbConnection;
+    public AnimalJdbc(Connection connection) {
+        this.connection = connection;
     }
 
 
@@ -35,7 +35,7 @@ public class AnimalJdbc implements AnimalDao {
     public Animal create(Animal animal) {
         LOGGER.info("create(" + animal + ")");
 
-        try (PreparedStatement createStatement = dbConnection.prepareStatement(JdbcUtilities.ANIMAL_INSERT_QUERY, Statement.RETURN_GENERATED_KEYS)) {
+        try (PreparedStatement createStatement = connection.prepareStatement(JdbcUtilities.ANIMAL_INSERT_QUERY, Statement.RETURN_GENERATED_KEYS)) {
             createStatement.setString(1, animal.getName());
             createStatement.setDate(2, Date.valueOf(animal.getBirthDate()));
             createStatement.execute();
@@ -57,7 +57,7 @@ public class AnimalJdbc implements AnimalDao {
     public Optional<Animal> read(Long id) {
         LOGGER.info("read (id: " + id + ")");
 
-        try (PreparedStatement readStatement = dbConnection.prepareStatement(JdbcUtilities.ANIMAL_SELECT_QUERY)) {
+        try (PreparedStatement readStatement = connection.prepareStatement(JdbcUtilities.ANIMAL_SELECT_QUERY)) {
             readStatement.setLong(1, id);
 
             try (ResultSet resultSet = readStatement.executeQuery()) {
@@ -84,7 +84,7 @@ public class AnimalJdbc implements AnimalDao {
     public Animal update(Animal animal) {
         LOGGER.info("update (" + animal + ")");
 
-        try (PreparedStatement updateStatement = dbConnection.prepareStatement(JdbcUtilities.ANIMAL_UPDATE_QUERY)) {
+        try (PreparedStatement updateStatement = connection.prepareStatement(JdbcUtilities.ANIMAL_UPDATE_QUERY)) {
             updateStatement.setString(1, animal.getName());
             updateStatement.setDate(2, Date.valueOf(animal.getBirthDate()));
             updateStatement.setLong(3, animal.getId());
@@ -99,7 +99,7 @@ public class AnimalJdbc implements AnimalDao {
     public boolean delete(Long id) {
         LOGGER.info("delete (id: " + id + ")");
 
-        try (PreparedStatement deleteStatement = dbConnection.prepareStatement(JdbcUtilities.ANIMAL_DELETE_QUERY)) {
+        try (PreparedStatement deleteStatement = connection.prepareStatement(JdbcUtilities.ANIMAL_DELETE_QUERY)) {
             deleteStatement.setLong(1, id);
             deleteStatement.executeUpdate();
             LOGGER.info("delete (id: " + id + ") succeed");

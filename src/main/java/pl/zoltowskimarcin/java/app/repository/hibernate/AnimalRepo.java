@@ -1,5 +1,7 @@
 package pl.zoltowskimarcin.java.app.repository.hibernate;
 
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
 import pl.zoltowskimarcin.java.app.repository.AnimalDao;
 import pl.zoltowskimarcin.java.app.web.model.Animal;
 
@@ -7,6 +9,8 @@ import java.util.Optional;
 
 public class AnimalRepo implements AnimalDao {
 
+    @PersistenceContext
+    private EntityManager entityManager;
 
     //todo 29.01.2024
     //implementacja z wykorzystaniem Hibernate i Entity
@@ -16,7 +20,9 @@ public class AnimalRepo implements AnimalDao {
 
     @Override
     public Animal create(Animal animal) {
-        return null;
+        entityManager.persist(animal);
+        entityManager.flush();
+        return animal;
     }
 
     @Override

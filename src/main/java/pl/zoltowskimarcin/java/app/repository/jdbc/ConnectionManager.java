@@ -11,17 +11,18 @@ public class ConnectionManager {
 
     private static ConnectionManager connectionManager;
     private static Connection connection;
-
+    private static String path;
     private String url;
     private String user;
     private String password;
 
-    private final String rootPath = Thread.currentThread().getContextClassLoader().getResource("").getPath();
-    private final String appConfigPath = rootPath + "java.properties";
+    public static void setPath(String path) {
+        ConnectionManager.path = path;
+    }
 
     private ConnectionManager() {
 
-        loadProperties();
+        loadProperties(path);
 
         if (connection == null) {
             try {
@@ -29,18 +30,6 @@ public class ConnectionManager {
             } catch (SQLException e) {
                 System.out.println(e.getMessage());
             }
-        }
-    }
-
-    private void loadProperties() {
-        Properties properties = new Properties();
-        try (FileInputStream input = new FileInputStream(appConfigPath)) {
-            properties.load(input);
-            url = properties.getProperty("url");
-            user = properties.getProperty("user");
-            password = properties.getProperty("password");
-        } catch (IOException e) {
-            throw new RuntimeException(e);
         }
     }
 
@@ -54,4 +43,32 @@ public class ConnectionManager {
     public static Connection getConnection() {
         return connection;
     }
+
+    public static void closeConnection() {
+        try {
+            if (connection != null && !connection.isClosed()) {
+                connection.close();
+                connectionManager = null;
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+
+
+    private void loadProperties(String path) {
+        Properties properties = new Properties();
+        try (FileInputStream input = new FileInputStream(path)) {
+            properties.load(input);
+            url = properties.getProperty("url");
+            user = properties.getProperty("user");
+            password = properties.getProperty("password");
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+
+
 }
