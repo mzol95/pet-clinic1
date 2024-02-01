@@ -24,10 +24,10 @@ class AnimalJdbcIntegrationTest {
 
     @BeforeEach
     public void setUpDatabase() throws SQLException {
-        ConnectionManager.setPath("src/test/resources/java.properties");
+        ConnectionManager.setPath("src/test/resources/database.properties");
         ConnectionManager.getInstance();
-        connection = ConnectionManager.getConnection();
-
+        connection = ConnectionManager.getInstance();
+        System.out.println("create connection");
         try (Statement statement = connection.createStatement()) {
             statement.execute(JdbcUtilities.CUSTOM_SEQUENCER);
             statement.execute(JdbcUtilities.CREATE_ANIMAL_TABLE_QUERY);
@@ -40,14 +40,11 @@ class AnimalJdbcIntegrationTest {
         try (Statement statement = connection.createStatement()) {
             statement.execute(JdbcUtilities.ANIMAL_DROP_TABLE_QUERY);
             statement.execute(JdbcUtilities.ANIMAL_DROP_SEQ_QUERY);
+            ConnectionManager.getInstance().close();
+            System.out.println("drop connection");
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
-    }
-
-    @AfterAll
-    public static void closeConnection() {
-        ConnectionManager.closeConnection();
     }
 
 
