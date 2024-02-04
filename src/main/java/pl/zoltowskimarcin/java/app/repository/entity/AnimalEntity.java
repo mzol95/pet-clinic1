@@ -1,22 +1,29 @@
 package pl.zoltowskimarcin.java.app.repository.entity;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 
 import java.time.LocalDate;
+import java.util.Objects;
 
 @Entity
 @Table(name = "animal")
 public class AnimalEntity {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "seq")
+    @SequenceGenerator(name = "seq", allocationSize = 1)
     private Long id;
-
     private String name;
     private LocalDate birthDate;
+
+
+    public AnimalEntity() {
+    }
+
+    public AnimalEntity(String name, LocalDate birthDate) {
+        this.name = name;
+        this.birthDate = birthDate;
+    }
 
     public Long getId() {
         return id;
@@ -43,11 +50,20 @@ public class AnimalEntity {
     }
 
     @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        AnimalEntity animalEntity = (AnimalEntity) o;
+        return Objects.equals(id, animalEntity.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
+    }
+
+    @Override
     public String toString() {
-        return "AnimalEntity{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                ", birthDate=" + birthDate +
-                '}';
+        return "AnimalEntity{" + "id=" + id + ", name='" + name + '\'' + ", birthDate=" + birthDate + '}';
     }
 }

@@ -13,13 +13,15 @@ public class DataSource {
 
     private static HikariConfig config = new HikariConfig();
     private static HikariDataSource ds;
-    private static final String rootPath = Thread.currentThread().getContextClassLoader().getResource("").getPath();
-    private static final String appConfigPath = rootPath + "java.properties";
+    private static String path;
 
-    static {
+    private DataSource() {
+    }
+
+    public static void getInstance(){
         Properties properties = new Properties();
 
-        try(FileInputStream input = new FileInputStream(appConfigPath)){
+        try(FileInputStream input = new FileInputStream(path)){
             properties.load(input);
         } catch (IOException e) {
             throw new RuntimeException(e);
@@ -35,10 +37,13 @@ public class DataSource {
         ds = new HikariDataSource(config);
     }
 
-    private DataSource() {
-    }
-
     public static Connection getConnection() throws SQLException {
         return ds.getConnection();
     }
+
+    public static void setPath(String path) {
+        DataSource.path = path;
+    }
+
+
 }

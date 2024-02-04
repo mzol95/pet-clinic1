@@ -1,7 +1,6 @@
 package pl.zoltowskimarcin.java.app.repository.hibernate;
 
-import jakarta.persistence.EntityManager;
-import jakarta.persistence.PersistenceContext;
+import org.hibernate.SessionFactory;
 import pl.zoltowskimarcin.java.app.repository.AnimalDao;
 import pl.zoltowskimarcin.java.app.web.model.Animal;
 
@@ -9,8 +8,12 @@ import java.util.Optional;
 
 public class AnimalRepo implements AnimalDao {
 
-    @PersistenceContext
-    private EntityManager entityManager;
+    private SessionFactory sessionFactory;
+
+    public AnimalRepo(SessionFactory sessionFactory) {
+        this.sessionFactory = sessionFactory;
+    }
+
 
     //todo 29.01.2024
     //implementacja z wykorzystaniem Hibernate i Entity
@@ -20,8 +23,6 @@ public class AnimalRepo implements AnimalDao {
 
     @Override
     public Animal create(Animal animal) {
-        entityManager.persist(animal);
-        entityManager.flush();
         return animal;
     }
 
