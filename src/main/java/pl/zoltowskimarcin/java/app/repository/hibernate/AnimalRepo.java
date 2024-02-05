@@ -1,7 +1,10 @@
 package pl.zoltowskimarcin.java.app.repository.hibernate;
 
+import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.hibernate.Transaction;
 import pl.zoltowskimarcin.java.app.repository.AnimalDao;
+import pl.zoltowskimarcin.java.app.repository.entity.AnimalEntity;
 import pl.zoltowskimarcin.java.app.web.model.Animal;
 
 import java.util.Optional;
@@ -23,17 +26,74 @@ public class AnimalRepo implements AnimalDao {
 
     @Override
     public Animal create(Animal animal) {
+        AnimalEntity animalToPersist = new AnimalEntity();
+        animalToPersist.setName(animal.getName());
+        animalToPersist.setBirthDate(animal.getBirthDate());
+
+        Session session = sessionFactory.openSession();
+        Transaction transaction = null;
+
+        try {
+            transaction = session.beginTransaction();
+            session.persist(animalToPersist);
+            transaction.commit();
+            animal.setId(animalToPersist.getId());
+        } catch (Exception e) {
+            if (transaction != null) {
+                transaction.rollback();
+            }
+            throw new RuntimeException(e);
+        } finally {
+            if (session != null) {
+                session.close();
+            }
+        }
+
         return animal;
     }
 
     @Override
     public Optional<Animal> read(Long id) {
-        return Optional.empty();
+        AnimalEntity readAnimal;
+        Animal animal = new Animal();
+
+        try (Session session = sessionFactory.openSession()) {
+            readAnimal = session.find(AnimalEntity.class, id);
+        }
+
+        animal.setId(readAnimal.getId());
+        animal.setName(readAnimal.getName());
+        animal.setBirthDate(readAnimal.getBirthDate());
+
+        return Optional.ofNullable(animal);
     }
 
     @Override
     public Animal update(Animal animal) {
-        return null;
+        Session session = sessionFactory.openSession();
+        Transaction transaction = null;
+
+        AnimalEntity updatedAnimal = new AnimalEntity();
+        updatedAnimal.setId(animal.getId());
+        updatedAnimal.setName(animal.getName());
+        updatedAnimal.setBirthDate(animal.getBirthDate());
+
+
+        try {
+            transaction = session.beginTransaction();
+            session.merge(updatedAnimal);
+            transaction.commit();
+        } catch (Exception e) {
+            if (transaction != null) {
+                transaction.rollback();
+            }
+            throw new RuntimeException(e);
+        } finally {
+            if (session != null) {
+                session.close();
+            }
+        }
+        return animal;
     }
 
     @Override

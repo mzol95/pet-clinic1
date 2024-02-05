@@ -15,7 +15,8 @@ class ConnectionManagerTest {
     @AfterEach
     public void closeConnection() {
         try {
-            ConnectionManager.getInstance().close();
+            if (!ConnectionManager.getInstance().isClosed())
+                ConnectionManager.getInstance().close();
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }

@@ -30,7 +30,8 @@ class DataSourceTest {
     @AfterEach
     public void closeConnectionWithDatabase() {
         try {
-            connection.close();
+            if (!connection.isClosed())
+                connection.close();
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }

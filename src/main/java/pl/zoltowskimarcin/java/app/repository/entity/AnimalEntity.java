@@ -14,6 +14,7 @@ public class AnimalEntity {
     @SequenceGenerator(name = "seq", allocationSize = 1)
     private Long id;
     private String name;
+    @Column(name = "birth_date")
     private LocalDate birthDate;
 
 

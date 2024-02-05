@@ -27,24 +27,7 @@
         <property name="format_sql">true</property>
         <!-- Drop and re-create the database schema on startup -->
         <property name="hbm2ddl.auto">validate</property>
-
         <!-- Names the annotated entity class -->
         <mapping class="pl.zoltowskimarcin.java.app.repository.entity.AnimalEntity"/>
     </session-factory>
 </hibernate-configuration>
-
-        <!--
-        Useful Hibernate configuration properties:
-        show_sql - jeżeli chcemy, aby zapytania HQL wykonywane przez Hibernate były logowane na ekranie konsoli, powinniśmy ustawić wartość tej właściwości na true
-        format_sql - w przypadku, gdy show_sql jest włączone, ustawienie wartości true dla format_sql poprawi czytelność długich i skomplikowanych zapytań
-        hbm2ddl.auto - pozwala zdefiniować, czy i w jaki sposób, Hibernate ma generować (tzn. tworzyć) tabele na podstawie definicji encji. Kilka możliwych wartości to, np.:
-
-        none - Hibernate nie będzie generował tabeli bazy danych
-        create-drop - tabele zostaną utworzone na starcie SessionFactory i usunięte podczas zamknięcia obiektu SessionFactory
-        create - usuwa stare dane z bazy i tworzy tabele
-        update - aktualizuje tabele (jeżeli tego wymagają lub tworzy, jeżeli nie istnieją)
-        validate - sprawdza, czy tabele w bazie są zgodne z definicjami encji
-        dialect - wskazuje na klasę, która definiuje dialekt konkretnej implementacji bazy danych, np.:
-        org.hibernate.dialect.MySQL8Dialect
-        org.hibernate.dialect.PostgreSQLDialect
-        -->

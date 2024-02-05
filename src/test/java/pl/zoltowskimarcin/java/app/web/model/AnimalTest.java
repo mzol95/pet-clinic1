@@ -5,13 +5,12 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import java.time.LocalDate;
-import java.util.List;
 
 class AnimalTest {
 
-    public static String ANIMAL_POJO_NAME_JERRY = "Jerry";
-    public static LocalDate ANIMAL_BIRTHDAY_01_01_2000 = LocalDate.of(2000, 1, 1);
-    public static int ANIMAL_VISIT_LIST_SIZE = 2;
+    private static String ANIMAL_POJO_NAME_JERRY = "Jerry";
+    private static LocalDate ANIMAL_BIRTHDAY_01_01_2000 = LocalDate.of(2000, 1, 1);
+    private static int ANIMAL_VISIT_LIST_SIZE = 2;
 
     @Test
     void animal_name_is_jerry() {
