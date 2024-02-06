@@ -98,6 +98,13 @@ public class AnimalRepo implements AnimalDao {
 
     @Override
     public boolean delete(Long id) {
+        try (Session session = sessionFactory.openSession()) {
+            AnimalEntity animalToRemove = session.get(AnimalEntity.class, id);
+            if (animalToRemove != null) {
+                session.remove(animalToRemove);
+                return true;
+            }
+        }
         return false;
     }
 
