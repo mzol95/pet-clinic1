@@ -35,7 +35,7 @@ public class AnimalService {
     public Animal update(Animal animal) {
         LOGGER.info("update(" + animal + ")");
         Animal resultAnimal = animalDao.update(animal);
-        LOGGER.info("update(...) succeed");
+        LOGGER.info("update(...) = " + resultAnimal);
         return resultAnimal;
     }
 
