@@ -1,16 +1,13 @@
 package pl.zoltowskimarcin.java.app.repository;
 
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 import pl.zoltowskimarcin.java.app.exceptions.EntityNotFoundException;
 import pl.zoltowskimarcin.java.app.repository.jdbc.AnimalJdbc;
+import pl.zoltowskimarcin.java.app.repository.jdbc.ConnectionManager;
 import pl.zoltowskimarcin.java.app.utils.JdbcUtilities;
 import pl.zoltowskimarcin.java.app.web.model.Animal;
 
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.time.LocalDate;
@@ -23,21 +20,31 @@ class AnimalJdbcIntegrationTest {
     private static final LocalDate ANIMAL_BIRTH_DATE = LocalDate.of(2000, 1, 1);
     private static final LocalDate UPDATE_ANIMAL_BIRTH_DATE = LocalDate.of(3000, 2, 2);
     private static final long ANIMAL_ID = 1L;
-
     private static Connection connection;
 
     @BeforeEach
     public void setUpDatabase() throws SQLException {
-        connection = DriverManager.getConnection("jdbc:h2:mem:test", "sa", "");
+        ConnectionManager.setPath("src/test/resources/database.properties");
+        ConnectionManager.getInstance();
+        connection = ConnectionManager.getInstance();
+        System.out.println("create connection");
         try (Statement statement = connection.createStatement()) {
             statement.execute(JdbcUtilities.CUSTOM_SEQUENCER);
             statement.execute(JdbcUtilities.CREATE_ANIMAL_TABLE_QUERY);
         }
+
     }
 
     @AfterEach
-    public void closeDownDatabase() throws SQLException {
-        connection.close();
+    public void cleanTable() {
+        try (Statement statement = connection.createStatement()) {
+            statement.execute(JdbcUtilities.ANIMAL_DROP_TABLE_QUERY);
+            statement.execute(JdbcUtilities.ANIMAL_DROP_SEQ_QUERY);
+            ConnectionManager.getInstance().close();
+            System.out.println("drop connection");
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
     }
 
 
@@ -50,7 +57,8 @@ class AnimalJdbcIntegrationTest {
         //when
         Animal createdAnimal = animalJDBC.create(animal);
         //todo orElseThrow -> wlasny wyjatek - done
-        Animal resultAnimal = animalJDBC.read(ANIMAL_ID).orElseThrow(() -> new EntityNotFoundException());
+        Animal resultAnimal = animalJDBC.read(1L).orElseThrow(() -> new EntityNotFoundException());
+
 
         //then
         Assertions.assertAll(

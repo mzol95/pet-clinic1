@@ -1,0 +1,135 @@
+package pl.zoltowskimarcin.java.app.repository.hibernate;
+
+import org.hibernate.SessionFactory;
+import org.hibernate.boot.MetadataSources;
+import org.hibernate.boot.registry.StandardServiceRegistry;
+import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import pl.zoltowskimarcin.java.app.exceptions.EntityNotFoundException;
+import pl.zoltowskimarcin.java.app.repository.jdbc.ConnectionManager;
+import pl.zoltowskimarcin.java.app.utils.JdbcUtilities;
+import pl.zoltowskimarcin.java.app.web.model.Animal;
+
+import java.sql.Connection;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.time.LocalDate;
+
+class AnimalRepoIntegrationTest {
+    public static final long FIRST_ANIMAL_ID_1 = 1L;
+    private static LocalDate ANIMAL_BIRTHDAY_01_01_2000 = LocalDate.of(2000, 1, 1);
+    private static final LocalDate UPDATE_ANIMAL_BIRTH_DATE_02_02_3000 = LocalDate.of(3000, 2, 2);
+    private static String ANIMAL_ENTITY_NAME_JERRY = "Jerry";
+    private static final String ANIMAL_ENTITY_NAME_UPDATED_JERRY = "UpdatedJerry";
+    private SessionFactory sessionFactory;
+    private Connection connection;
+
+
+    @BeforeEach
+    void setUp() {
+        ConnectionManager.setPath("src/test/resources/database.properties");
+        ConnectionManager.getInstance();
+        connection = ConnectionManager.getInstance();
+
+        try (Statement statement = connection.createStatement()) {
+            statement.execute(JdbcUtilities.CUSTOM_SEQUENCER);
+            statement.execute(JdbcUtilities.CREATE_ANIMAL_TABLE_QUERY);
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        StandardServiceRegistry serviceRegistry = new StandardServiceRegistryBuilder()
+                .configure()
+                .build();
+        try {
+            sessionFactory = new MetadataSources(serviceRegistry)
+                    .buildMetadata()
+                    .buildSessionFactory();
+        } catch (Exception e) {
+            e.printStackTrace();
+            StandardServiceRegistryBuilder.destroy(serviceRegistry);
+        }
+    }
+
+    @AfterEach
+    void tearDown() {
+        if (sessionFactory != null) {
+            sessionFactory.close();
+        }
+
+        try (Statement statement = connection.createStatement()) {
+            statement.execute(JdbcUtilities.ANIMAL_DROP_TABLE_QUERY);
+            statement.execute(JdbcUtilities.ANIMAL_DROP_SEQ_QUERY);
+            ConnectionManager.getInstance().close();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+
+    }
+
+
+    @Test
+    void read() {
+        //given
+        AnimalRepo animalRepo = new AnimalRepo(sessionFactory);
+        Animal animal = new Animal(ANIMAL_ENTITY_NAME_JERRY, ANIMAL_BIRTHDAY_01_01_2000);
+
+        //when
+        animalRepo.create(animal);
+        Animal readAnimal = animalRepo.read(FIRST_ANIMAL_ID_1)
+                .orElseThrow(() -> new EntityNotFoundException("Entity not found"));
+
+        Long readAnimalId = readAnimal.getId();
+        String readAnimalName = readAnimal.getName();
+        LocalDate readAnimalBirthDate = readAnimal.getBirthDate();
+
+        //then
+        Assertions.assertAll(
+                () -> Assertions.assertEquals(FIRST_ANIMAL_ID_1, readAnimalId, "Id are different"),
+                () -> Assertions.assertEquals(ANIMAL_ENTITY_NAME_JERRY, readAnimalName, "Names are different"),
+                () -> Assertions.assertEquals(ANIMAL_BIRTHDAY_01_01_2000, readAnimalBirthDate, "Birth dates are different")
+        );
+    }
+
+    @Test
+    void update() {
+        //given
+        AnimalRepo animalRepo = new AnimalRepo(sessionFactory);
+        Animal animalBeforeUpdate = new Animal(ANIMAL_ENTITY_NAME_JERRY, ANIMAL_BIRTHDAY_01_01_2000);
+
+        //when
+        Animal animalAfterUpdate = animalRepo.create(animalBeforeUpdate);
+        animalAfterUpdate.setName(ANIMAL_ENTITY_NAME_UPDATED_JERRY);
+        animalAfterUpdate.setBirthDate(UPDATE_ANIMAL_BIRTH_DATE_02_02_3000);
+
+        Animal updatedAnimal = animalRepo.update(animalAfterUpdate);
+
+        Long updatedAnimalId = updatedAnimal.getId();
+        String updatedAnimalName = updatedAnimal.getName();
+        LocalDate updatedAnimalBirthDate = updatedAnimal.getBirthDate();
+
+        //then
+        Assertions.assertAll(
+                () -> Assertions.assertEquals(FIRST_ANIMAL_ID_1, updatedAnimalId, "Ids are different"),
+                () -> Assertions.assertEquals(ANIMAL_ENTITY_NAME_UPDATED_JERRY, updatedAnimalName, "Names are different"),
+                () -> Assertions.assertEquals(UPDATE_ANIMAL_BIRTH_DATE_02_02_3000, updatedAnimalBirthDate, "Birth dates are different")
+        );
+
+    }
+
+    @Test
+    void delete() {
+        //given
+        AnimalRepo animalRepo = new AnimalRepo(sessionFactory);
+        Animal animal = new Animal(ANIMAL_ENTITY_NAME_JERRY, ANIMAL_BIRTHDAY_01_01_2000);
+
+        //when
+        Animal createdAnimal = animalRepo.create(animal);
+        boolean isEntityDeleted = animalRepo.delete(createdAnimal.getId());
+
+        //then
+        Assertions.assertEquals(true, isEntityDeleted, "Entity is not deleted");
+    }
+}

@@ -1,10 +1,8 @@
 package pl.zoltowskimarcin.java.app.repository;
 
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 import pl.zoltowskimarcin.java.app.repository.jdbc.AnimalJdbc;
+import pl.zoltowskimarcin.java.app.repository.jdbc.ConnectionManager;
 import pl.zoltowskimarcin.java.app.utils.JdbcUtilities;
 import pl.zoltowskimarcin.java.app.web.model.Animal;
 
@@ -19,21 +17,29 @@ class AnimalJdbcTest {
     private static final String ANIMAL_NAME = "Dog";
     private static final LocalDate ANIMAL_BIRTH_DATE = LocalDate.of(2000, 1, 1);
 
-
     private static Connection connection;
 
     @BeforeEach
     public void setUpDatabase() throws SQLException {
-        connection = DriverManager.getConnection("jdbc:h2:mem:test", "sa", "");
+        ConnectionManager.setPath("src/test/resources/database.properties");
+        ConnectionManager.getInstance();
+        connection = ConnectionManager.getInstance();
         try (Statement statement = connection.createStatement()) {
             statement.execute(JdbcUtilities.CUSTOM_SEQUENCER);
             statement.execute(JdbcUtilities.CREATE_ANIMAL_TABLE_QUERY);
         }
+
     }
 
     @AfterEach
-    public void closeDownDatabase() throws SQLException {
-        connection.close();
+    public void cleanTable() {
+        try (Statement statement = connection.createStatement()) {
+            statement.execute(JdbcUtilities.ANIMAL_DROP_TABLE_QUERY);
+            statement.execute(JdbcUtilities.ANIMAL_DROP_SEQ_QUERY);
+            ConnectionManager.getInstance().close();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @Test
@@ -44,11 +50,13 @@ class AnimalJdbcTest {
 
         //when
         Animal createdAnimal = animalJDBC.create(animal);
+        String createdAnimalName = createdAnimal.getName();
+        LocalDate createdAnimalBirthDate = createdAnimal.getBirthDate();
 
         //then
         Assertions.assertAll(
-                () -> Assertions.assertEquals(animal.getName(), createdAnimal.getName(), "Animal objects names don't match"),
-                () -> Assertions.assertEquals(animal.getBirthDate(), createdAnimal.getBirthDate(), "Animal objects birthday dates don't match")
+                () -> Assertions.assertEquals(ANIMAL_NAME, createdAnimalName, "Animal objects names don't match"),
+                () -> Assertions.assertEquals(ANIMAL_BIRTH_DATE, createdAnimalBirthDate, "Animal objects birthday dates don't match")
         );
     }
 

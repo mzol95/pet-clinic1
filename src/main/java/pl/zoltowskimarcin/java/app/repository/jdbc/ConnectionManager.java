@@ -9,32 +9,42 @@ import java.util.Properties;
 
 public class ConnectionManager {
 
-    private static ConnectionManager connectionManager;
-    private static Connection connection;
+    private static ConnectionManager connectionManager = null;
+    private static Connection connection = null;
 
+    private static String path;
     private String url;
     private String user;
     private String password;
 
-    private final String rootPath = Thread.currentThread().getContextClassLoader().getResource("").getPath();
-    private final String appConfigPath = rootPath + "java.properties";
-
     private ConnectionManager() {
+    }
 
-        loadProperties();
-
-        if (connection == null) {
-            try {
-                connection = DriverManager.getConnection(url, user, password);
-            } catch (SQLException e) {
-                System.out.println(e.getMessage());
+    public static Connection getInstance() {
+        try {
+            if (connectionManager == null || connection.isClosed()) {
+                connectionManager = new ConnectionManager();
+                connectionManager.init();
             }
+            return connection;
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
         }
     }
 
-    private void loadProperties() {
+    private void init() throws SQLException {
+        loadProperties(path);
+        connection = DriverManager.getConnection(url, user, password);
+    }
+
+    public static void setPath(String path) {
+        ConnectionManager.path = path;
+    }
+
+
+    private void loadProperties(String path) {
         Properties properties = new Properties();
-        try (FileInputStream input = new FileInputStream(appConfigPath)) {
+        try (FileInputStream input = new FileInputStream(path)) {
             properties.load(input);
             url = properties.getProperty("url");
             user = properties.getProperty("user");
@@ -44,14 +54,5 @@ public class ConnectionManager {
         }
     }
 
-    public static ConnectionManager getInstance() {
-        if (connectionManager == null) {
-            connectionManager = new ConnectionManager();
-        }
-        return connectionManager;
-    }
 
-    public static Connection getConnection() {
-        return connection;
-    }
 }
