@@ -1,6 +1,6 @@
 package pl.zoltowskimarcin.java.app.service;
 
-import pl.zoltowskimarcin.java.app.exceptions.EntityNotFoundException;
+import pl.zoltowskimarcin.java.app.exceptions.AnimalNotFoundException;
 import pl.zoltowskimarcin.java.app.repository.AnimalDao;
 import pl.zoltowskimarcin.java.app.web.model.Animal;
 
@@ -23,11 +23,10 @@ public class AnimalService {
         return createdAnimal;
     }
 
-    //todo własny wyjątek - done
     public Animal read(Long id) {
         LOGGER.info("read(id:  " + id + ")");
         Animal recivedAnimal = animalDao.read(id)
-                .orElseThrow(() -> new EntityNotFoundException("Entity does not exist in database"));
+                .orElseThrow(() -> new AnimalNotFoundException("Entity does not exist in database"));
         LOGGER.info("read(...) = " + recivedAnimal);
         return recivedAnimal;
     }

@@ -20,6 +20,8 @@ public class ConnectionManager {
     private ConnectionManager() {
     }
 
+
+    //todo 08.02.24 init bezposrednio i runtime exception
     public static Connection getInstance() {
         try {
             if (connectionManager == null || connection.isClosed()) {
@@ -41,7 +43,7 @@ public class ConnectionManager {
         ConnectionManager.path = path;
     }
 
-
+    //todo zmienic wyjatek 08.02 i do osobnej klasy
     private void loadProperties(String path) {
         Properties properties = new Properties();
         try (FileInputStream input = new FileInputStream(path)) {

@@ -18,6 +18,7 @@ public class DataSource {
     private DataSource() {
     }
 
+    //todo 08.20.2024 zwracac DataSource i dopiero getConnection static block lepszy
     public static void getInstance(){
         Properties properties = new Properties();
 

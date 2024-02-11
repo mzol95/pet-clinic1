@@ -8,9 +8,9 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import pl.zoltowskimarcin.java.app.exceptions.EntityNotFoundException;
+import pl.zoltowskimarcin.java.app.exceptions.AnimalNotFoundException;
 import pl.zoltowskimarcin.java.app.repository.jdbc.ConnectionManager;
-import pl.zoltowskimarcin.java.app.utils.JdbcUtilities;
+import pl.zoltowskimarcin.java.app.utils.JdbcConstants;
 import pl.zoltowskimarcin.java.app.web.model.Animal;
 
 import java.sql.Connection;
@@ -27,7 +27,7 @@ class AnimalRepoIntegrationTest {
     private SessionFactory sessionFactory;
     private Connection connection;
 
-
+//todo nowo otwrte polaczaenie
     @BeforeEach
     void setUp() {
         ConnectionManager.setPath("src/test/resources/database.properties");
@@ -35,8 +35,8 @@ class AnimalRepoIntegrationTest {
         connection = ConnectionManager.getInstance();
 
         try (Statement statement = connection.createStatement()) {
-            statement.execute(JdbcUtilities.CUSTOM_SEQUENCER);
-            statement.execute(JdbcUtilities.CREATE_ANIMAL_TABLE_QUERY);
+            statement.execute(JdbcConstants.CUSTOM_SEQUENCER);
+            statement.execute(JdbcConstants.CREATE_ANIMAL_TABLE_QUERY);
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
@@ -60,8 +60,8 @@ class AnimalRepoIntegrationTest {
         }
 
         try (Statement statement = connection.createStatement()) {
-            statement.execute(JdbcUtilities.ANIMAL_DROP_TABLE_QUERY);
-            statement.execute(JdbcUtilities.ANIMAL_DROP_SEQ_QUERY);
+            statement.execute(JdbcConstants.ANIMAL_DROP_TABLE_QUERY);
+            statement.execute(JdbcConstants.ANIMAL_DROP_SEQ_QUERY);
             ConnectionManager.getInstance().close();
         } catch (SQLException e) {
             throw new RuntimeException(e);
@@ -79,7 +79,7 @@ class AnimalRepoIntegrationTest {
         //when
         animalRepo.create(animal);
         Animal readAnimal = animalRepo.read(FIRST_ANIMAL_ID_1)
-                .orElseThrow(() -> new EntityNotFoundException("Entity not found"));
+                .orElseThrow(() -> new AnimalNotFoundException("Entity not found"));
 
         Long readAnimalId = readAnimal.getId();
         String readAnimalName = readAnimal.getName();

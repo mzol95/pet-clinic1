@@ -1,10 +1,10 @@
 package pl.zoltowskimarcin.java.app.repository;
 
 import org.junit.jupiter.api.*;
-import pl.zoltowskimarcin.java.app.exceptions.EntityNotFoundException;
+import pl.zoltowskimarcin.java.app.exceptions.AnimalNotFoundException;
 import pl.zoltowskimarcin.java.app.repository.jdbc.AnimalJdbc;
 import pl.zoltowskimarcin.java.app.repository.jdbc.ConnectionManager;
-import pl.zoltowskimarcin.java.app.utils.JdbcUtilities;
+import pl.zoltowskimarcin.java.app.utils.JdbcConstants;
 import pl.zoltowskimarcin.java.app.web.model.Animal;
 
 import java.sql.Connection;
@@ -29,8 +29,8 @@ class AnimalJdbcIntegrationTest {
         connection = ConnectionManager.getInstance();
         System.out.println("create connection");
         try (Statement statement = connection.createStatement()) {
-            statement.execute(JdbcUtilities.CUSTOM_SEQUENCER);
-            statement.execute(JdbcUtilities.CREATE_ANIMAL_TABLE_QUERY);
+            statement.execute(JdbcConstants.CUSTOM_SEQUENCER);
+            statement.execute(JdbcConstants.CREATE_ANIMAL_TABLE_QUERY);
         }
 
     }
@@ -38,8 +38,8 @@ class AnimalJdbcIntegrationTest {
     @AfterEach
     public void cleanTable() {
         try (Statement statement = connection.createStatement()) {
-            statement.execute(JdbcUtilities.ANIMAL_DROP_TABLE_QUERY);
-            statement.execute(JdbcUtilities.ANIMAL_DROP_SEQ_QUERY);
+            statement.execute(JdbcConstants.ANIMAL_DROP_TABLE_QUERY);
+            statement.execute(JdbcConstants.ANIMAL_DROP_SEQ_QUERY);
             ConnectionManager.getInstance().close();
             System.out.println("drop connection");
         } catch (SQLException e) {
@@ -56,8 +56,7 @@ class AnimalJdbcIntegrationTest {
 
         //when
         Animal createdAnimal = animalJDBC.create(animal);
-        //todo orElseThrow -> wlasny wyjatek - done
-        Animal resultAnimal = animalJDBC.read(1L).orElseThrow(() -> new EntityNotFoundException());
+        Animal resultAnimal = animalJDBC.read(1L).orElseThrow(() -> new AnimalNotFoundException());
 
 
         //then

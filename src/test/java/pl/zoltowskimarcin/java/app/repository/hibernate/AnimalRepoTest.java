@@ -9,7 +9,7 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import pl.zoltowskimarcin.java.app.repository.jdbc.ConnectionManager;
-import pl.zoltowskimarcin.java.app.utils.JdbcUtilities;
+import pl.zoltowskimarcin.java.app.utils.JdbcConstants;
 import pl.zoltowskimarcin.java.app.web.model.Animal;
 
 import java.sql.Connection;
@@ -31,8 +31,8 @@ class AnimalRepoTest {
         connection = ConnectionManager.getInstance();
 
         try (Statement statement = connection.createStatement()) {
-            statement.execute(JdbcUtilities.CUSTOM_SEQUENCER);
-            statement.execute(JdbcUtilities.CREATE_ANIMAL_TABLE_QUERY);
+            statement.execute(JdbcConstants.CUSTOM_SEQUENCER);
+            statement.execute(JdbcConstants.CREATE_ANIMAL_TABLE_QUERY);
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
@@ -56,8 +56,8 @@ class AnimalRepoTest {
         }
 
         try (Statement statement = connection.createStatement()) {
-            statement.execute(JdbcUtilities.ANIMAL_DROP_TABLE_QUERY);
-            statement.execute(JdbcUtilities.ANIMAL_DROP_SEQ_QUERY);
+            statement.execute(JdbcConstants.ANIMAL_DROP_TABLE_QUERY);
+            statement.execute(JdbcConstants.ANIMAL_DROP_SEQ_QUERY);
             ConnectionManager.getInstance().close();
         } catch (SQLException e) {
             throw new RuntimeException(e);

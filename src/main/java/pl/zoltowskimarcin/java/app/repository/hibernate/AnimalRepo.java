@@ -3,6 +3,7 @@ package pl.zoltowskimarcin.java.app.repository.hibernate;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
+import pl.zoltowskimarcin.java.app.mapper.ModelMapperManager;
 import pl.zoltowskimarcin.java.app.repository.AnimalDao;
 import pl.zoltowskimarcin.java.app.repository.entity.AnimalEntity;
 import pl.zoltowskimarcin.java.app.web.model.Animal;
@@ -12,6 +13,7 @@ import java.util.logging.Logger;
 
 public class AnimalRepo implements AnimalDao {
 
+    //todo zmienic na singleton
     private SessionFactory sessionFactory;
 
     private static final Logger LOGGER = Logger.getLogger(AnimalRepo.class.getName());
@@ -20,18 +22,12 @@ public class AnimalRepo implements AnimalDao {
         this.sessionFactory = sessionFactory;
     }
 
-    //todo 29.01.2024
-    //implementacja z wykorzystaniem Hibernate i Entity
-    //Przygotować teorie o hibernate, entity, jpa, orm
-    //https://www.juniorjavadeveloper.pl/2024/01/08/omg-orm-jpa-hibernate-sessionfactory-entitymanager-jparepository-crudrepository-wyjasnione/#ktory-ze-sposobow-uzycia-hibernate-byl-pierwszy-odpowiedz-chatgpt
-    //https://github.com/juniorjavadeveloper-pl/hibernate-examples/tree/master/src/test/java/pl/juniorjavadeveloper/examples/hibernate/basic/configuration
-
+    //todo 08.02.2024 dodac model mapper
     @Override
     public Animal create(Animal animal) {
         LOGGER.info("create(" + animal + ")");
-        AnimalEntity animalToPersist = new AnimalEntity();
-        animalToPersist.setName(animal.getName());
-        animalToPersist.setBirthDate(animal.getBirthDate());
+
+        AnimalEntity animalToPersist = ModelMapperManager.getInstance().map(animal, AnimalEntity.class);
 
         Session session = sessionFactory.openSession();
         Transaction transaction = null;
@@ -45,7 +41,7 @@ public class AnimalRepo implements AnimalDao {
             if (transaction != null) {
                 transaction.rollback();
             }
-            throw new RuntimeException(e);
+            throw new RuntimeException(e); //todo - wyrzuc
         } finally {
             if (session != null) {
                 session.close();
@@ -59,15 +55,12 @@ public class AnimalRepo implements AnimalDao {
     public Optional<Animal> read(Long id) {
         LOGGER.info("read(id:  " + id + ")");
         AnimalEntity readAnimal;
-        Animal animal = new Animal();
 
         try (Session session = sessionFactory.openSession()) {
             readAnimal = session.find(AnimalEntity.class, id);
         }
+        Animal animal = ModelMapperManager.getInstance().map(readAnimal,Animal.class);
 
-        animal.setId(readAnimal.getId());
-        animal.setName(readAnimal.getName());
-        animal.setBirthDate(readAnimal.getBirthDate());
         LOGGER.info("read(...) = " + animal);
         return Optional.ofNullable(animal);
     }
@@ -78,10 +71,7 @@ public class AnimalRepo implements AnimalDao {
         Session session = sessionFactory.openSession();
         Transaction transaction = null;
 
-        AnimalEntity updatedAnimal = new AnimalEntity();
-        updatedAnimal.setId(animal.getId());
-        updatedAnimal.setName(animal.getName());
-        updatedAnimal.setBirthDate(animal.getBirthDate());
+        AnimalEntity updatedAnimal = ModelMapperManager.getInstance().map(animal,AnimalEntity.class);
 
         try {
             transaction = session.beginTransaction();
