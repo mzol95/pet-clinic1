@@ -68,7 +68,7 @@ class AnimalRepoTest {
     @Test
     void create() {
         //given
-        AnimalRepo animalRepo = new AnimalRepo(sessionFactory);
+        AnimalRepo animalRepo = new AnimalRepo();
         Animal animal = new Animal(ANIMAL_ENTITY_NAME_JERRY, ANIMAL_BIRTHDAY_01_01_2000);
 
         //when

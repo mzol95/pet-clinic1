@@ -1,11 +1,11 @@
 package pl.zoltowskimarcin.java.app.repository.hibernate;
 
 import org.hibernate.Session;
-import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 import pl.zoltowskimarcin.java.app.mapper.ModelMapperManager;
 import pl.zoltowskimarcin.java.app.repository.AnimalDao;
 import pl.zoltowskimarcin.java.app.repository.entity.AnimalEntity;
+import pl.zoltowskimarcin.java.app.utils.HibernateUtility;
 import pl.zoltowskimarcin.java.app.web.model.Animal;
 
 import java.util.Optional;
@@ -13,23 +13,18 @@ import java.util.logging.Logger;
 
 public class AnimalRepo implements AnimalDao {
 
-    //todo zmienic na singleton
-    private SessionFactory sessionFactory;
+    //todo 08.02.24 zmienic sessinFactory na singleton - done
 
     private static final Logger LOGGER = Logger.getLogger(AnimalRepo.class.getName());
 
-    public AnimalRepo(SessionFactory sessionFactory) {
-        this.sessionFactory = sessionFactory;
-    }
-
-    //todo 08.02.2024 dodac model mapper
+    //todo 08.02.2024 dodac model mapper - done
     @Override
     public Animal create(Animal animal) {
         LOGGER.info("create(" + animal + ")");
 
-        AnimalEntity animalToPersist = ModelMapperManager.getInstance().map(animal, AnimalEntity.class);
+        AnimalEntity animalToPersist = ModelMapperManager.getModelMapper().map(animal, AnimalEntity.class);
 
-        Session session = sessionFactory.openSession();
+        Session session = HibernateUtility.getSessionFactory().openSession();
         Transaction transaction = null;
 
         try {
@@ -56,10 +51,10 @@ public class AnimalRepo implements AnimalDao {
         LOGGER.info("read(id:  " + id + ")");
         AnimalEntity readAnimal;
 
-        try (Session session = sessionFactory.openSession()) {
+        try (Session session = HibernateUtility.getSessionFactory().openSession()) {
             readAnimal = session.find(AnimalEntity.class, id);
         }
-        Animal animal = ModelMapperManager.getInstance().map(readAnimal,Animal.class);
+        Animal animal = ModelMapperManager.getModelMapper().map(readAnimal, Animal.class);
 
         LOGGER.info("read(...) = " + animal);
         return Optional.ofNullable(animal);
@@ -68,10 +63,10 @@ public class AnimalRepo implements AnimalDao {
     @Override
     public Animal update(Animal animal) {
         LOGGER.info("update(" + animal + ")");
-        Session session = sessionFactory.openSession();
+        Session session = HibernateUtility.getSessionFactory().openSession();
         Transaction transaction = null;
 
-        AnimalEntity updatedAnimal = ModelMapperManager.getInstance().map(animal,AnimalEntity.class);
+        AnimalEntity updatedAnimal = ModelMapperManager.getModelMapper().map(animal, AnimalEntity.class);
 
         try {
             transaction = session.beginTransaction();
@@ -94,7 +89,7 @@ public class AnimalRepo implements AnimalDao {
     @Override
     public boolean delete(Long id) {
         LOGGER.info("delete(id: " + id + ")");
-        try (Session session = sessionFactory.openSession()) {
+        try (Session session = HibernateUtility.getSessionFactory().openSession()) {
             AnimalEntity animalToRemove = session.get(AnimalEntity.class, id);
             if (animalToRemove != null) {
                 session.remove(animalToRemove);

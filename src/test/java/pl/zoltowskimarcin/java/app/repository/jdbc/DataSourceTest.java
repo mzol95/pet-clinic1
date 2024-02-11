@@ -20,7 +20,6 @@ class DataSourceTest {
             DataSource.setPath(TEST_RESOURCES_DATABASE_PROPERTIES_PATH);
             DataSource.getInstance();
             connection = DataSource.getConnection();
-//            DataSource.getInstance().getConnection();
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }

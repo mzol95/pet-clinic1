@@ -69,18 +69,15 @@ class AnimalJdbcIntegrationTest {
     @Test
     void update() {
         //given
-        //todo usunac id z konstruktora Animal - done
         AnimalJdbc animalJDBC = new AnimalJdbc(connection);
         Animal animal = new Animal(ANIMAL_NAME, ANIMAL_BIRTH_DATE);
         Animal newAnimal = new Animal(UPDATE_ANIMAL_NAME, UPDATE_ANIMAL_BIRTH_DATE);
 
         //when
-        //todo zwracac z create obiekt z id -> generowanie sekwencja/pobieranie wygenerowanych - done
         animal = animalJDBC.create(animal);
         newAnimal.setId(animal.getId());
         Animal updatedAnimal = animalJDBC.update(newAnimal);
 
-        //todo assertAll - done
         //then
         Assertions.assertAll(
                 () -> Assertions.assertEquals(UPDATE_ANIMAL_NAME, updatedAnimal.getName(), "Animal names don't match"),
@@ -90,7 +87,6 @@ class AnimalJdbcIntegrationTest {
     }
 
     @Test
-        //todo do poprawy id - done
     void delete() {
         //given
         AnimalJdbc animalJDBC = new AnimalJdbc(connection);

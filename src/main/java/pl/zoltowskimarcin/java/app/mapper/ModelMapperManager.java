@@ -4,16 +4,16 @@ import org.modelmapper.ModelMapper;
 
 public class ModelMapperManager {
 
-    private final static ModelMapper instance;
+    private final static ModelMapper modelMapper;
 
     static {
-        instance = new ModelMapper();
+        modelMapper = new ModelMapper();
     }
 
     private ModelMapperManager() {
     }
 
-    public static ModelMapper getInstance() {
-        return instance;
+    public static ModelMapper getModelMapper() {
+        return modelMapper;
     }
 }
