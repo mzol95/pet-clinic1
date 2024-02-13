@@ -1,5 +1,6 @@
 package pl.zoltowskimarcin.java.app.repository;
 
+import pl.zoltowskimarcin.java.app.exceptions.AnimalCreateFaultException;
 import pl.zoltowskimarcin.java.app.web.model.Animal;
 
 import java.util.Optional;

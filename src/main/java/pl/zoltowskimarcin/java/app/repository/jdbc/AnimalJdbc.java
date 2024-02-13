@@ -2,6 +2,7 @@ package pl.zoltowskimarcin.java.app.repository.jdbc;
 
 import pl.zoltowskimarcin.java.app.repository.AnimalDao;
 import pl.zoltowskimarcin.java.app.utils.JdbcConstants;
+import pl.zoltowskimarcin.java.app.utils.PropertyManager;
 import pl.zoltowskimarcin.java.app.web.model.Animal;
 
 import java.sql.*;
@@ -16,11 +17,8 @@ public class AnimalJdbc implements AnimalDao {
 
     private Connection connection;
 
-    //todo 29.01.2024
-    //todo 1. Stworzyć oddzielną klasę zarządzającą połączeniami z bazą danych -> singleton zwracający połączenie - done
-    //todo 2. Opcjonalnie zarządzanie pulą połączeń - done
-    //todo 3. Podpiąć liquibase z tabelami bazy - done
-    //todo 4. W klasie zarządzającej połączeniem z bazą danych użyć nowej klasy zarządzającej danymi do połączenia się z bazą danych - java Properties - done
+    //todo 4. W klasie zarządzającej połączeniem z bazą danych użyć nowej klasy
+    //zarządzającej danymi do połączenia się z bazą danych - java Properties - done
 
     public AnimalJdbc(Connection connection) {
         this.connection = connection;
@@ -76,7 +74,6 @@ public class AnimalJdbc implements AnimalDao {
         return Optional.empty();
     }
 
-    //todo zmienic na animal 29.01.24 - done
     public Animal update(Animal animal) {
         LOGGER.info("update (" + animal + ")");
 
@@ -110,11 +107,3 @@ public class AnimalJdbc implements AnimalDao {
 
 }
 
-//todo 25.01.2024 - done
-//zaimplementować dostęp do bazy danych za pomocą JDBC dla klasy Animal i metody create -> stworzyć tabele w bazie
-//kroki do wykonania dla JDBC
-//1. DriverManager
-//2. Connection
-//3. Statement/PreparedStatement
-//4. ResultSet
-//0. try-with-resources

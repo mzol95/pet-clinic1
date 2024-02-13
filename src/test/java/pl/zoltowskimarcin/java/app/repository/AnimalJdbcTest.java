@@ -20,8 +20,8 @@ class AnimalJdbcTest {
 
     @BeforeEach
     public void setUpDatabase() throws SQLException {
+
         ConnectionManager.setPath("src/test/resources/database.properties");
-        ConnectionManager.getInstance();
         connection = ConnectionManager.getInstance();
         try (Statement statement = connection.createStatement()) {
             statement.execute(JdbcConstants.CUSTOM_SEQUENCER);

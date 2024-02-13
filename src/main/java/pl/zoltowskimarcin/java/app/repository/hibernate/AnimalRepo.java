@@ -2,6 +2,7 @@ package pl.zoltowskimarcin.java.app.repository.hibernate;
 
 import org.hibernate.Session;
 import org.hibernate.Transaction;
+import pl.zoltowskimarcin.java.app.exceptions.AnimalCreateFaultException;
 import pl.zoltowskimarcin.java.app.mapper.ModelMapperManager;
 import pl.zoltowskimarcin.java.app.repository.AnimalDao;
 import pl.zoltowskimarcin.java.app.repository.entity.AnimalEntity;
@@ -36,7 +37,7 @@ public class AnimalRepo implements AnimalDao {
             if (transaction != null) {
                 transaction.rollback();
             }
-            throw new RuntimeException(e); //todo - wyrzuc
+            throw new RuntimeException();
         } finally {
             if (session != null) {
                 session.close();
