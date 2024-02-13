@@ -1,30 +1,27 @@
 package pl.zoltowskimarcin.java.app.repository.jdbc;
 
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.Test;
+import com.zaxxer.hikari.HikariConfig;
+import com.zaxxer.hikari.HikariDataSource;
+import org.junit.jupiter.api.*;
 
 import java.sql.Connection;
 import java.sql.SQLException;
 
 class DataSourceTest {
 
-    public static final String TEST_RESOURCES_DATABASE_PROPERTIES_PATH = "src/test/resources/database.properties";
+    public static final String TEST_RESOURCES_DATABASE_PROPERTIES_PATH = "src/test/resources/jdbc.properties";
     private static Connection connection;
 
 
-    @BeforeAll
-    public static void getConnectionWithDatabase() {
+    @BeforeEach
+    public void getConnectionWithDatabase() {
         try {
-            DataSource.setPath(TEST_RESOURCES_DATABASE_PROPERTIES_PATH);
-            DataSource.getInstance();
-            connection = DataSource.getConnection();
+            HikariConfig config = new HikariConfig(TEST_RESOURCES_DATABASE_PROPERTIES_PATH);
+            HikariDataSource ds = new HikariDataSource(config);
+            connection = ds.getConnection();
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
-        DataSource.setPath(TEST_RESOURCES_DATABASE_PROPERTIES_PATH);
-
     }
 
     @AfterEach
@@ -40,11 +37,6 @@ class DataSourceTest {
     @Test
     void getConnection() {
         //given
-        try {
-            connection = DataSource.getConnection();
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
 
         //when
 

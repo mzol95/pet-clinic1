@@ -25,22 +25,18 @@ class ConnectionManagerTest {
     @Test
     void connection_is_not_null() {
         //given
-        ConnectionManager.setPath(TEST_RESOURCES_DATABASE_PROPERTIES_PATH);
-        ConnectionManager.getInstance();
-
+        ConnectionManager.setPath("src/test/resources/database.properties");
         //when
+
         connection = ConnectionManager.getInstance();
 
         //then
         Assertions.assertNotNull(connection);
-
     }
 
     @Test
     void connection_is_closed() {
         //given
-        ConnectionManager.setPath(TEST_RESOURCES_DATABASE_PROPERTIES_PATH);
-        ConnectionManager.getInstance();
         boolean isClosed;
 
         //when

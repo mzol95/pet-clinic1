@@ -26,8 +26,7 @@ class AnimalRepoTest {
 
     @BeforeEach
     void setUp() {
-        ConnectionManager.setPath("src/test/resources/database.properties");
-        ConnectionManager.getInstance();
+
         connection = ConnectionManager.getInstance();
 
         try (Statement statement = connection.createStatement()) {
