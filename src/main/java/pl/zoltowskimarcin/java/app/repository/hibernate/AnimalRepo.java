@@ -1,10 +1,12 @@
 package pl.zoltowskimarcin.java.app.repository.hibernate;
 
 import org.hibernate.Session;
-import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
+import pl.zoltowskimarcin.java.app.exceptions.AnimalCreateFaultException;
+import pl.zoltowskimarcin.java.app.mapper.ModelMapperManager;
 import pl.zoltowskimarcin.java.app.repository.AnimalDao;
 import pl.zoltowskimarcin.java.app.repository.entity.AnimalEntity;
+import pl.zoltowskimarcin.java.app.utils.HibernateUtility;
 import pl.zoltowskimarcin.java.app.web.model.Animal;
 
 import java.util.Optional;
@@ -12,28 +14,18 @@ import java.util.logging.Logger;
 
 public class AnimalRepo implements AnimalDao {
 
-    private SessionFactory sessionFactory;
+    //todo 08.02.24 zmienic sessinFactory na singleton - done
 
     private static final Logger LOGGER = Logger.getLogger(AnimalRepo.class.getName());
 
-    public AnimalRepo(SessionFactory sessionFactory) {
-        this.sessionFactory = sessionFactory;
-    }
-
-    //todo 29.01.2024
-    //implementacja z wykorzystaniem Hibernate i Entity
-    //Przygotować teorie o hibernate, entity, jpa, orm
-    //https://www.juniorjavadeveloper.pl/2024/01/08/omg-orm-jpa-hibernate-sessionfactory-entitymanager-jparepository-crudrepository-wyjasnione/#ktory-ze-sposobow-uzycia-hibernate-byl-pierwszy-odpowiedz-chatgpt
-    //https://github.com/juniorjavadeveloper-pl/hibernate-examples/tree/master/src/test/java/pl/juniorjavadeveloper/examples/hibernate/basic/configuration
-
+    //todo 08.02.2024 dodac model mapper - done
     @Override
     public Animal create(Animal animal) {
         LOGGER.info("create(" + animal + ")");
-        AnimalEntity animalToPersist = new AnimalEntity();
-        animalToPersist.setName(animal.getName());
-        animalToPersist.setBirthDate(animal.getBirthDate());
 
-        Session session = sessionFactory.openSession();
+        AnimalEntity animalToPersist = ModelMapperManager.getModelMapper().map(animal, AnimalEntity.class);
+
+        Session session = HibernateUtility.getSessionFactory().openSession();
         Transaction transaction = null;
 
         try {
@@ -45,7 +37,7 @@ public class AnimalRepo implements AnimalDao {
             if (transaction != null) {
                 transaction.rollback();
             }
-            throw new RuntimeException(e);
+            throw new RuntimeException();
         } finally {
             if (session != null) {
                 session.close();
@@ -59,15 +51,12 @@ public class AnimalRepo implements AnimalDao {
     public Optional<Animal> read(Long id) {
         LOGGER.info("read(id:  " + id + ")");
         AnimalEntity readAnimal;
-        Animal animal = new Animal();
 
-        try (Session session = sessionFactory.openSession()) {
+        try (Session session = HibernateUtility.getSessionFactory().openSession()) {
             readAnimal = session.find(AnimalEntity.class, id);
         }
+        Animal animal = ModelMapperManager.getModelMapper().map(readAnimal, Animal.class);
 
-        animal.setId(readAnimal.getId());
-        animal.setName(readAnimal.getName());
-        animal.setBirthDate(readAnimal.getBirthDate());
         LOGGER.info("read(...) = " + animal);
         return Optional.ofNullable(animal);
     }
@@ -75,13 +64,10 @@ public class AnimalRepo implements AnimalDao {
     @Override
     public Animal update(Animal animal) {
         LOGGER.info("update(" + animal + ")");
-        Session session = sessionFactory.openSession();
+        Session session = HibernateUtility.getSessionFactory().openSession();
         Transaction transaction = null;
 
-        AnimalEntity updatedAnimal = new AnimalEntity();
-        updatedAnimal.setId(animal.getId());
-        updatedAnimal.setName(animal.getName());
-        updatedAnimal.setBirthDate(animal.getBirthDate());
+        AnimalEntity updatedAnimal = ModelMapperManager.getModelMapper().map(animal, AnimalEntity.class);
 
         try {
             transaction = session.beginTransaction();
@@ -104,7 +90,7 @@ public class AnimalRepo implements AnimalDao {
     @Override
     public boolean delete(Long id) {
         LOGGER.info("delete(id: " + id + ")");
-        try (Session session = sessionFactory.openSession()) {
+        try (Session session = HibernateUtility.getSessionFactory().openSession()) {
             AnimalEntity animalToRemove = session.get(AnimalEntity.class, id);
             if (animalToRemove != null) {
                 session.remove(animalToRemove);

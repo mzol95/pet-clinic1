@@ -9,7 +9,7 @@ public class AnimalController {
 
     private static final Logger LOGGER = Logger.getLogger(AnimalController.class.getName());
 
-    private AnimalService animalService;
+    private final AnimalService animalService;
 
     public AnimalController(AnimalService animalService) {
         this.animalService = animalService;
@@ -45,10 +45,4 @@ public class AnimalController {
         return false;
     }
 
-
-    //todo 25.01.2024 - done
-    /*
-     * stworzyć metody crud z logerami
-     * dla każdej metody stworzyć testy jednostkowe oraz DID
-     * */
 }

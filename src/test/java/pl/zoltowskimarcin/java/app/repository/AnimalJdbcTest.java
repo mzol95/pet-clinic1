@@ -3,11 +3,10 @@ package pl.zoltowskimarcin.java.app.repository;
 import org.junit.jupiter.api.*;
 import pl.zoltowskimarcin.java.app.repository.jdbc.AnimalJdbc;
 import pl.zoltowskimarcin.java.app.repository.jdbc.ConnectionManager;
-import pl.zoltowskimarcin.java.app.utils.JdbcUtilities;
+import pl.zoltowskimarcin.java.app.utils.JdbcConstants;
 import pl.zoltowskimarcin.java.app.web.model.Animal;
 
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.time.LocalDate;
@@ -21,12 +20,12 @@ class AnimalJdbcTest {
 
     @BeforeEach
     public void setUpDatabase() throws SQLException {
+
         ConnectionManager.setPath("src/test/resources/database.properties");
-        ConnectionManager.getInstance();
         connection = ConnectionManager.getInstance();
         try (Statement statement = connection.createStatement()) {
-            statement.execute(JdbcUtilities.CUSTOM_SEQUENCER);
-            statement.execute(JdbcUtilities.CREATE_ANIMAL_TABLE_QUERY);
+            statement.execute(JdbcConstants.CUSTOM_SEQUENCER);
+            statement.execute(JdbcConstants.CREATE_ANIMAL_TABLE_QUERY);
         }
 
     }
@@ -34,8 +33,8 @@ class AnimalJdbcTest {
     @AfterEach
     public void cleanTable() {
         try (Statement statement = connection.createStatement()) {
-            statement.execute(JdbcUtilities.ANIMAL_DROP_TABLE_QUERY);
-            statement.execute(JdbcUtilities.ANIMAL_DROP_SEQ_QUERY);
+            statement.execute(JdbcConstants.ANIMAL_DROP_TABLE_QUERY);
+            statement.execute(JdbcConstants.ANIMAL_DROP_SEQ_QUERY);
             ConnectionManager.getInstance().close();
         } catch (SQLException e) {
             throw new RuntimeException(e);

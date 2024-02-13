@@ -1,16 +1,13 @@
 package pl.zoltowskimarcin.java.app.repository.hibernate;
 
-import org.hibernate.SessionFactory;
-import org.hibernate.boot.MetadataSources;
-import org.hibernate.boot.registry.StandardServiceRegistry;
-import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import pl.zoltowskimarcin.java.app.exceptions.EntityNotFoundException;
+import pl.zoltowskimarcin.java.app.exceptions.AnimalNotFoundException;
+import pl.zoltowskimarcin.java.app.exceptions.FailedQueryExecutionException;
 import pl.zoltowskimarcin.java.app.repository.jdbc.ConnectionManager;
-import pl.zoltowskimarcin.java.app.utils.JdbcUtilities;
+import pl.zoltowskimarcin.java.app.utils.JdbcConstants;
 import pl.zoltowskimarcin.java.app.web.model.Animal;
 
 import java.sql.Connection;
@@ -24,62 +21,43 @@ class AnimalRepoIntegrationTest {
     private static final LocalDate UPDATE_ANIMAL_BIRTH_DATE_02_02_3000 = LocalDate.of(3000, 2, 2);
     private static String ANIMAL_ENTITY_NAME_JERRY = "Jerry";
     private static final String ANIMAL_ENTITY_NAME_UPDATED_JERRY = "UpdatedJerry";
-    private SessionFactory sessionFactory;
     private Connection connection;
 
-
+    //todo nowo otwarte połączenie - done
     @BeforeEach
-    void setUp() {
+    void setUp() throws FailedQueryExecutionException {
         ConnectionManager.setPath("src/test/resources/database.properties");
-        ConnectionManager.getInstance();
         connection = ConnectionManager.getInstance();
-
         try (Statement statement = connection.createStatement()) {
-            statement.execute(JdbcUtilities.CUSTOM_SEQUENCER);
-            statement.execute(JdbcUtilities.CREATE_ANIMAL_TABLE_QUERY);
+            statement.execute(JdbcConstants.CUSTOM_SEQUENCER);
+            statement.execute(JdbcConstants.CREATE_ANIMAL_TABLE_QUERY);
         } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
-        StandardServiceRegistry serviceRegistry = new StandardServiceRegistryBuilder()
-                .configure()
-                .build();
-        try {
-            sessionFactory = new MetadataSources(serviceRegistry)
-                    .buildMetadata()
-                    .buildSessionFactory();
-        } catch (Exception e) {
-            e.printStackTrace();
-            StandardServiceRegistryBuilder.destroy(serviceRegistry);
+            throw new FailedQueryExecutionException(); //todo 08.02.24 - done
         }
     }
 
     @AfterEach
     void tearDown() {
-        if (sessionFactory != null) {
-            sessionFactory.close();
-        }
-
         try (Statement statement = connection.createStatement()) {
-            statement.execute(JdbcUtilities.ANIMAL_DROP_TABLE_QUERY);
-            statement.execute(JdbcUtilities.ANIMAL_DROP_SEQ_QUERY);
+            statement.execute(JdbcConstants.ANIMAL_DROP_TABLE_QUERY);
+            statement.execute(JdbcConstants.ANIMAL_DROP_SEQ_QUERY);
             ConnectionManager.getInstance().close();
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
-
     }
 
 
     @Test
     void read() {
         //given
-        AnimalRepo animalRepo = new AnimalRepo(sessionFactory);
+        AnimalRepo animalRepo = new AnimalRepo();
         Animal animal = new Animal(ANIMAL_ENTITY_NAME_JERRY, ANIMAL_BIRTHDAY_01_01_2000);
 
         //when
         animalRepo.create(animal);
         Animal readAnimal = animalRepo.read(FIRST_ANIMAL_ID_1)
-                .orElseThrow(() -> new EntityNotFoundException("Entity not found"));
+                .orElseThrow(() -> new AnimalNotFoundException("Entity not found"));
 
         Long readAnimalId = readAnimal.getId();
         String readAnimalName = readAnimal.getName();
@@ -96,7 +74,7 @@ class AnimalRepoIntegrationTest {
     @Test
     void update() {
         //given
-        AnimalRepo animalRepo = new AnimalRepo(sessionFactory);
+        AnimalRepo animalRepo = new AnimalRepo();
         Animal animalBeforeUpdate = new Animal(ANIMAL_ENTITY_NAME_JERRY, ANIMAL_BIRTHDAY_01_01_2000);
 
         //when
@@ -122,7 +100,7 @@ class AnimalRepoIntegrationTest {
     @Test
     void delete() {
         //given
-        AnimalRepo animalRepo = new AnimalRepo(sessionFactory);
+        AnimalRepo animalRepo = new AnimalRepo();
         Animal animal = new Animal(ANIMAL_ENTITY_NAME_JERRY, ANIMAL_BIRTHDAY_01_01_2000);
 
         //when

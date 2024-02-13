@@ -1,10 +1,10 @@
 package pl.zoltowskimarcin.java.app.repository;
 
 import org.junit.jupiter.api.*;
-import pl.zoltowskimarcin.java.app.exceptions.EntityNotFoundException;
+import pl.zoltowskimarcin.java.app.exceptions.AnimalNotFoundException;
 import pl.zoltowskimarcin.java.app.repository.jdbc.AnimalJdbc;
 import pl.zoltowskimarcin.java.app.repository.jdbc.ConnectionManager;
-import pl.zoltowskimarcin.java.app.utils.JdbcUtilities;
+import pl.zoltowskimarcin.java.app.utils.JdbcConstants;
 import pl.zoltowskimarcin.java.app.web.model.Animal;
 
 import java.sql.Connection;
@@ -25,12 +25,10 @@ class AnimalJdbcIntegrationTest {
     @BeforeEach
     public void setUpDatabase() throws SQLException {
         ConnectionManager.setPath("src/test/resources/database.properties");
-        ConnectionManager.getInstance();
         connection = ConnectionManager.getInstance();
-        System.out.println("create connection");
         try (Statement statement = connection.createStatement()) {
-            statement.execute(JdbcUtilities.CUSTOM_SEQUENCER);
-            statement.execute(JdbcUtilities.CREATE_ANIMAL_TABLE_QUERY);
+            statement.execute(JdbcConstants.CUSTOM_SEQUENCER);
+            statement.execute(JdbcConstants.CREATE_ANIMAL_TABLE_QUERY);
         }
 
     }
@@ -38,10 +36,9 @@ class AnimalJdbcIntegrationTest {
     @AfterEach
     public void cleanTable() {
         try (Statement statement = connection.createStatement()) {
-            statement.execute(JdbcUtilities.ANIMAL_DROP_TABLE_QUERY);
-            statement.execute(JdbcUtilities.ANIMAL_DROP_SEQ_QUERY);
+            statement.execute(JdbcConstants.ANIMAL_DROP_TABLE_QUERY);
+            statement.execute(JdbcConstants.ANIMAL_DROP_SEQ_QUERY);
             ConnectionManager.getInstance().close();
-            System.out.println("drop connection");
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
@@ -56,8 +53,7 @@ class AnimalJdbcIntegrationTest {
 
         //when
         Animal createdAnimal = animalJDBC.create(animal);
-        //todo orElseThrow -> wlasny wyjatek - done
-        Animal resultAnimal = animalJDBC.read(1L).orElseThrow(() -> new EntityNotFoundException());
+        Animal resultAnimal = animalJDBC.read(1L).orElseThrow(() -> new AnimalNotFoundException());
 
 
         //then
@@ -70,18 +66,15 @@ class AnimalJdbcIntegrationTest {
     @Test
     void update() {
         //given
-        //todo usunac id z konstruktora Animal - done
         AnimalJdbc animalJDBC = new AnimalJdbc(connection);
         Animal animal = new Animal(ANIMAL_NAME, ANIMAL_BIRTH_DATE);
         Animal newAnimal = new Animal(UPDATE_ANIMAL_NAME, UPDATE_ANIMAL_BIRTH_DATE);
 
         //when
-        //todo zwracac z create obiekt z id -> generowanie sekwencja/pobieranie wygenerowanych - done
         animal = animalJDBC.create(animal);
         newAnimal.setId(animal.getId());
         Animal updatedAnimal = animalJDBC.update(newAnimal);
 
-        //todo assertAll - done
         //then
         Assertions.assertAll(
                 () -> Assertions.assertEquals(UPDATE_ANIMAL_NAME, updatedAnimal.getName(), "Animal names don't match"),
@@ -91,7 +84,6 @@ class AnimalJdbcIntegrationTest {
     }
 
     @Test
-        //todo do poprawy id - done
     void delete() {
         //given
         AnimalJdbc animalJDBC = new AnimalJdbc(connection);

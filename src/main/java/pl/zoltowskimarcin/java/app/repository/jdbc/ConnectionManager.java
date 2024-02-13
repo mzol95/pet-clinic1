@@ -13,9 +13,9 @@ public class ConnectionManager {
     private static Connection connection = null;
 
     private static String path;
-    private String url;
-    private String user;
-    private String password;
+    private static String url;
+    private static String user;
+    private static String password;
 
     private ConnectionManager() {
     }
@@ -24,7 +24,8 @@ public class ConnectionManager {
         try {
             if (connectionManager == null || connection.isClosed()) {
                 connectionManager = new ConnectionManager();
-                connectionManager.init();
+                loadProperties(path);
+                connection = DriverManager.getConnection(url, user, password);
             }
             return connection;
         } catch (SQLException e) {
@@ -32,17 +33,11 @@ public class ConnectionManager {
         }
     }
 
-    private void init() throws SQLException {
-        loadProperties(path);
-        connection = DriverManager.getConnection(url, user, password);
-    }
-
     public static void setPath(String path) {
         ConnectionManager.path = path;
     }
 
-
-    private void loadProperties(String path) {
+    private static void loadProperties(String path) {
         Properties properties = new Properties();
         try (FileInputStream input = new FileInputStream(path)) {
             properties.load(input);
