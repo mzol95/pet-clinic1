@@ -13,7 +13,7 @@ class PropertyManagerTest {
         //given
 
         //when
-        String jdbUrlFromFile = PropertyManager.getInstance().getProperty(JDBC_URL_FROM_JDBC_PROPERTIES);
+        String jdbUrlFromFile = PropertyManager.getProperty(JDBC_URL_FROM_JDBC_PROPERTIES);
 
         //then
         Assertions.assertEquals(
