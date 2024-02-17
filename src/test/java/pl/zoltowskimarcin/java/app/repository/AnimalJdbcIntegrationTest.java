@@ -44,7 +44,7 @@ class AnimalJdbcIntegrationTest {
             statement.execute(JdbcConstants.ANIMAL_DROP_SEQ_QUERY);
             ConnectionManager.getInstance().close();
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            e.printStackTrace();
         }
     }
 

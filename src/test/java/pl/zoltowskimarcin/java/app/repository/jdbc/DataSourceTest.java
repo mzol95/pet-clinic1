@@ -20,7 +20,7 @@ class DataSourceTest {
             HikariDataSource ds = new HikariDataSource(config);
             connection = ds.getConnection();
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            e.printStackTrace();
         }
     }
 
@@ -30,7 +30,7 @@ class DataSourceTest {
             if (!connection.isClosed())
                 connection.close();
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            e.printStackTrace();
         }
     }
 

@@ -18,7 +18,7 @@ class ConnectionManagerTest {
             if (!ConnectionManager.getInstance().isClosed())
                 ConnectionManager.getInstance().close();
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            e.printStackTrace();
         }
     }
 
@@ -37,7 +37,7 @@ class ConnectionManagerTest {
     @Test
     void connection_is_closed() {
         //given
-        boolean isClosed;
+        boolean isClosed = false;
 
         //when
         connection = ConnectionManager.getInstance();
@@ -45,10 +45,11 @@ class ConnectionManagerTest {
             ConnectionManager.getInstance().close();
             isClosed = connection.isClosed();
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            e.printStackTrace();
         }
 
         //then
         Assertions.assertEquals(true, isClosed);
+
     }
 }

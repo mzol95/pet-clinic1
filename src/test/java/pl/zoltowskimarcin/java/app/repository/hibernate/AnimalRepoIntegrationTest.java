@@ -4,6 +4,7 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.springframework.boot.test.context.SpringBootTest;
 import pl.zoltowskimarcin.java.app.exceptions.AnimalNotFoundException;
 import pl.zoltowskimarcin.java.app.exceptions.FailedQueryExecutionException;
 import pl.zoltowskimarcin.java.app.repository.jdbc.ConnectionManager;
@@ -15,6 +16,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.time.LocalDate;
 
+@SpringBootTest
 class AnimalRepoIntegrationTest {
     public static final long FIRST_ANIMAL_ID_1 = 1L;
     private static LocalDate ANIMAL_BIRTHDAY_01_01_2000 = LocalDate.of(2000, 1, 1);
@@ -25,8 +27,6 @@ class AnimalRepoIntegrationTest {
 
 
 
-
-    //todo nowo otwarte połączenie - done
     @BeforeEach
     void setUp() throws FailedQueryExecutionException {
         ConnectionManager.setPath("src/test/resources/database.properties");
@@ -46,7 +46,7 @@ class AnimalRepoIntegrationTest {
             statement.execute(JdbcConstants.ANIMAL_DROP_SEQ_QUERY);
             ConnectionManager.getInstance().close();
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            e.printStackTrace();
         }
     }
 

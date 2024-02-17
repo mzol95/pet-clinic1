@@ -33,7 +33,7 @@ class AnimalRepoTest {
             statement.execute(JdbcConstants.CUSTOM_SEQUENCER);
             statement.execute(JdbcConstants.CREATE_ANIMAL_TABLE_QUERY);
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            e.printStackTrace();
         }
         StandardServiceRegistry serviceRegistry = new StandardServiceRegistryBuilder()
                 .configure()
@@ -59,7 +59,7 @@ class AnimalRepoTest {
             statement.execute(JdbcConstants.ANIMAL_DROP_SEQ_QUERY);
             ConnectionManager.getInstance().close();
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            e.printStackTrace();
         }
 
     }

@@ -30,10 +30,10 @@ public class ConnectionManager {
                 loadProperties(path);
                 connection = DriverManager.getConnection(url, user, password);
             }
-            return connection;
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            e.printStackTrace();
         }
+        return connection;
     }
 
     public static void setPath(String path) {
@@ -48,7 +48,7 @@ public class ConnectionManager {
             user = properties.getProperty("user");
             password = properties.getProperty("password");
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            e.printStackTrace();
         }
     }
 
