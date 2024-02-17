@@ -1,17 +1,20 @@
 package pl.zoltowskimarcin.java.app.repository;
 
-import org.springframework.stereotype.Repository;
+import pl.zoltowskimarcin.java.app.exceptions.animal.AnimalCreateFaultException;
+import pl.zoltowskimarcin.java.app.exceptions.animal.AnimalDeleteFaultException;
+import pl.zoltowskimarcin.java.app.exceptions.animal.AnimalReadFaultException;
+import pl.zoltowskimarcin.java.app.exceptions.animal.AnimalUpdateFaultException;
 import pl.zoltowskimarcin.java.app.web.model.Animal;
 
 import java.util.Optional;
 
 public interface AnimalDao {
 
-    Animal create(Animal animal);
+    Animal create(Animal animal) throws AnimalCreateFaultException;
 
-    Optional<Animal> read(Long id);
+    Optional<Animal> read(Long id) throws AnimalReadFaultException;
 
-    Animal update(Animal animal);
+    Animal update(Animal animal) throws AnimalUpdateFaultException;
 
-    boolean delete(Long id);
+    boolean delete(Long id) throws AnimalDeleteFaultException;
 }

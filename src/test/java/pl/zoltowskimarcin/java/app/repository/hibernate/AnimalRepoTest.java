@@ -8,6 +8,7 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import pl.zoltowskimarcin.java.app.exceptions.animal.AnimalCreateFaultException;
 import pl.zoltowskimarcin.java.app.repository.jdbc.ConnectionManager;
 import pl.zoltowskimarcin.java.app.utils.JdbcConstants;
 import pl.zoltowskimarcin.java.app.web.model.Animal;
@@ -65,7 +66,7 @@ class AnimalRepoTest {
     }
 
     @Test
-    void create() {
+    void create() throws AnimalCreateFaultException {
         //given
         AnimalRepo animalRepo = new AnimalRepo();
         Animal animal = new Animal(ANIMAL_ENTITY_NAME_JERRY, ANIMAL_BIRTHDAY_01_01_2000);

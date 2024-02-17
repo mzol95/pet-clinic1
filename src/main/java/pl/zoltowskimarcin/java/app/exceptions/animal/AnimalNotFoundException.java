@@ -1,4 +1,4 @@
-package pl.zoltowskimarcin.java.app.exceptions;
+package pl.zoltowskimarcin.java.app.exceptions.animal;
 
 
 public class AnimalNotFoundException extends Exception {

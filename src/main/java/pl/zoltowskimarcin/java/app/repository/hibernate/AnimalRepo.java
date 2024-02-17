@@ -3,6 +3,10 @@ package pl.zoltowskimarcin.java.app.repository.hibernate;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.springframework.stereotype.Repository;
+import pl.zoltowskimarcin.java.app.exceptions.animal.AnimalCreateFaultException;
+import pl.zoltowskimarcin.java.app.exceptions.animal.AnimalDeleteFaultException;
+import pl.zoltowskimarcin.java.app.exceptions.animal.AnimalReadFaultException;
+import pl.zoltowskimarcin.java.app.exceptions.animal.AnimalUpdateFaultException;
 import pl.zoltowskimarcin.java.app.mapper.AnimalMapper;
 import pl.zoltowskimarcin.java.app.repository.AnimalDao;
 import pl.zoltowskimarcin.java.app.repository.entity.AnimalEntity;
@@ -19,7 +23,7 @@ public class AnimalRepo implements AnimalDao {
     private static final Logger LOGGER = Logger.getLogger(AnimalRepo.class.getName());
 
     @Override
-    public Animal create(Animal animal) {
+    public Animal create(Animal animal) throws AnimalCreateFaultException {
         LOGGER.info("create(" + animal + ")");
 
         AnimalEntity animalToPersist = AnimalMapper.mapToEntity(animal);
@@ -35,6 +39,7 @@ public class AnimalRepo implements AnimalDao {
                 transaction.rollback();
             }
             LOGGER.log(Level.SEVERE, "Creating animal failed ", e);
+            throw new AnimalCreateFaultException("Creating animal failed");
         }
 
         LOGGER.info("create(...) = " + animal);
@@ -42,13 +47,16 @@ public class AnimalRepo implements AnimalDao {
     }
 
     @Override
-    public Optional<Animal> read(Long id) {
+    public Optional<Animal> read(Long id) throws AnimalReadFaultException {
         LOGGER.info("read(id:  " + id + ")");
 
         AnimalEntity readAnimal;
 
         try (Session session = HibernateUtility.getSessionFactory().openSession()) {
             readAnimal = session.find(AnimalEntity.class, id);
+        } catch (Exception e) {
+            LOGGER.log(Level.SEVERE, "Reading animal failed", e);
+            throw new AnimalReadFaultException("Reading animal failed");
         }
 
         Animal animal = AnimalMapper.mapToModel(readAnimal);
@@ -58,7 +66,7 @@ public class AnimalRepo implements AnimalDao {
     }
 
     @Override
-    public Animal update(Animal animal) {
+    public Animal update(Animal animal) throws AnimalUpdateFaultException {
         LOGGER.info("update(" + animal + ")");
 
         Transaction transaction = null;
@@ -72,7 +80,8 @@ public class AnimalRepo implements AnimalDao {
             if (transaction != null) {
                 transaction.rollback();
             }
-            LOGGER.log(Level.SEVERE, "Updating animal failed ", e);
+            LOGGER.log(Level.SEVERE, "Updating animal failed", e);
+            throw new AnimalUpdateFaultException("Updating animal failed");
         }
 
         LOGGER.info("update(...) = " + updatedAnimal);
@@ -80,7 +89,7 @@ public class AnimalRepo implements AnimalDao {
     }
 
     @Override
-    public boolean delete(Long id) {
+    public boolean delete(Long id) throws AnimalDeleteFaultException {
         LOGGER.info("delete(id: " + id + ")");
 
         try (Session session = HibernateUtility.getSessionFactory().openSession()) {
@@ -90,7 +99,11 @@ public class AnimalRepo implements AnimalDao {
                 LOGGER.info("delete (id: " + id + " succeed");
                 return true;
             }
+        } catch (Exception e) {
+            LOGGER.log(Level.SEVERE, "Deleting animal fault", e);
+            throw new AnimalDeleteFaultException("Deleting animal fault");
         }
+
         LOGGER.info("delete (id: " + id + " not succeed");
         return false;
     }

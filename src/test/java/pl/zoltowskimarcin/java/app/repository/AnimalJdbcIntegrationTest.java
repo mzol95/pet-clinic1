@@ -4,7 +4,7 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import pl.zoltowskimarcin.java.app.exceptions.AnimalNotFoundException;
+import pl.zoltowskimarcin.java.app.exceptions.animal.AnimalNotFoundException;
 import pl.zoltowskimarcin.java.app.repository.jdbc.AnimalJdbc;
 import pl.zoltowskimarcin.java.app.repository.jdbc.ConnectionManager;
 import pl.zoltowskimarcin.java.app.utils.JdbcConstants;

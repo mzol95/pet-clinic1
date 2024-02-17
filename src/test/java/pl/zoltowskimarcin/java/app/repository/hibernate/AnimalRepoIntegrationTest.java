@@ -5,7 +5,7 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
-import pl.zoltowskimarcin.java.app.exceptions.AnimalNotFoundException;
+import pl.zoltowskimarcin.java.app.exceptions.animal.*;
 import pl.zoltowskimarcin.java.app.exceptions.FailedQueryExecutionException;
 import pl.zoltowskimarcin.java.app.repository.jdbc.ConnectionManager;
 import pl.zoltowskimarcin.java.app.utils.JdbcConstants;
@@ -51,7 +51,7 @@ class AnimalRepoIntegrationTest {
 
 
     @Test
-    void read() throws AnimalNotFoundException {
+    void read() throws AnimalNotFoundException, AnimalCreateFaultException, AnimalReadFaultException {
         //given
         AnimalRepo animalRepo = new AnimalRepo();
         Animal animal = new Animal(ANIMAL_ENTITY_NAME_JERRY, ANIMAL_BIRTHDAY_01_01_2000);
@@ -74,7 +74,7 @@ class AnimalRepoIntegrationTest {
     }
 
     @Test
-    void update() {
+    void update() throws AnimalCreateFaultException, AnimalUpdateFaultException {
         //given
         AnimalRepo animalRepo = new AnimalRepo();
         Animal animalBeforeUpdate = new Animal(ANIMAL_ENTITY_NAME_JERRY, ANIMAL_BIRTHDAY_01_01_2000);
@@ -100,7 +100,7 @@ class AnimalRepoIntegrationTest {
     }
 
     @Test
-    void delete() {
+    void delete() throws AnimalCreateFaultException, AnimalDeleteFaultException {
         //given
         AnimalRepo animalRepo = new AnimalRepo();
         Animal animal = new Animal(ANIMAL_ENTITY_NAME_JERRY, ANIMAL_BIRTHDAY_01_01_2000);

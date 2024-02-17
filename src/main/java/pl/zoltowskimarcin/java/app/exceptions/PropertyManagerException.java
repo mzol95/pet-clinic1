@@ -1,6 +1,7 @@
 package pl.zoltowskimarcin.java.app.exceptions;
 
 public class PropertyManagerException extends Exception {
+
     public PropertyManagerException() {
     }
 

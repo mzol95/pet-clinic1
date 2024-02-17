@@ -45,6 +45,7 @@ public class AnimalJdbc implements AnimalDao {
         try (Connection connection = ConnectionManager.getConnection();
              PreparedStatement readStatement = connection.prepareStatement(JdbcConstants.ANIMAL_SELECT_QUERY)) {
 
+
             readStatement.setLong(1, id);
 
             try (ResultSet resultSet = readStatement.executeQuery()) {

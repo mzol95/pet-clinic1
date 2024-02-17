@@ -1,7 +1,7 @@
 package pl.zoltowskimarcin.java.app.service;
 
 import org.springframework.stereotype.Service;
-import pl.zoltowskimarcin.java.app.exceptions.AnimalNotFoundException;
+import pl.zoltowskimarcin.java.app.exceptions.animal.*;
 import pl.zoltowskimarcin.java.app.repository.AnimalDao;
 import pl.zoltowskimarcin.java.app.web.model.Animal;
 
@@ -11,7 +11,6 @@ import java.util.logging.Logger;
 public class AnimalService {
     private static final Logger LOGGER = Logger.getLogger(AnimalService.class.getName());
 
-
     private final AnimalDao animalJdbc;
 
     public AnimalService(AnimalDao animalJdbc) {
@@ -19,14 +18,14 @@ public class AnimalService {
     }
 
 
-    public Animal create(Animal animal) {
+    public Animal create(Animal animal) throws AnimalCreateFaultException {
         LOGGER.info("create(" + animal + ")");
         Animal createdAnimal = animalJdbc.create(animal);
         LOGGER.info("create(...) = " + createdAnimal);
         return createdAnimal;
     }
 
-    public Animal read(Long id) throws AnimalNotFoundException {
+    public Animal read(Long id) throws AnimalNotFoundException, AnimalReadFaultException {
         LOGGER.info("read(id:  " + id + ")");
         Animal recivedAnimal = animalJdbc.read(id)
                 .orElseThrow(() -> new AnimalNotFoundException("Entity does not exist in database"));
@@ -34,14 +33,14 @@ public class AnimalService {
         return recivedAnimal;
     }
 
-    public Animal update(Animal animal) {
+    public Animal update(Animal animal) throws AnimalUpdateFaultException {
         LOGGER.info("update(" + animal + ")");
         Animal resultAnimal = animalJdbc.update(animal);
         LOGGER.info("update(...) = " + resultAnimal);
         return resultAnimal;
     }
 
-    public boolean delete(Long id) {
+    public boolean delete(Long id) throws AnimalDeleteFaultException {
         boolean result;
         LOGGER.info("delete(id: " + id + ")");
         result = animalJdbc.delete(id);
