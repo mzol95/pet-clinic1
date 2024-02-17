@@ -11,9 +11,6 @@ public class PropertyManager {
     private static final String PROPERTY_FILE_NAME = "jdbc.properties";
     private static final Properties properties;
 
-    private PropertyManager() {
-    }
-
     static {
         properties = new Properties();
         try {
@@ -24,6 +21,9 @@ public class PropertyManager {
         } catch (Exception e) {
             LOGGER.log(Level.SEVERE, "Loading properties failed", e);
         }
+    }
+
+    private PropertyManager() {
     }
 
     public static String getProperty(String key) {

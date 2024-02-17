@@ -5,8 +5,8 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
-import pl.zoltowskimarcin.java.app.exceptions.animal.*;
 import pl.zoltowskimarcin.java.app.exceptions.FailedQueryExecutionException;
+import pl.zoltowskimarcin.java.app.exceptions.animal.*;
 import pl.zoltowskimarcin.java.app.repository.jdbc.ConnectionManager;
 import pl.zoltowskimarcin.java.app.utils.JdbcConstants;
 import pl.zoltowskimarcin.java.app.web.model.Animal;
@@ -18,34 +18,34 @@ import java.time.LocalDate;
 
 @SpringBootTest
 class AnimalRepoIntegrationTest {
-    public static final long FIRST_ANIMAL_ID_1 = 1L;
-    private static LocalDate ANIMAL_BIRTHDAY_01_01_2000 = LocalDate.of(2000, 1, 1);
+    private static final long FIRST_ANIMAL_ID_1 = 1L;
+    private static final LocalDate ANIMAL_BIRTHDAY_01_01_2000 = LocalDate.of(2000, 1, 1);
     private static final LocalDate UPDATE_ANIMAL_BIRTH_DATE_02_02_3000 = LocalDate.of(3000, 2, 2);
-    private static String ANIMAL_ENTITY_NAME_JERRY = "Jerry";
+    private static final String ANIMAL_ENTITY_NAME_JERRY = "Jerry";
     private static final String ANIMAL_ENTITY_NAME_UPDATED_JERRY = "UpdatedJerry";
-    private Connection connection;
-
-
 
     @BeforeEach
     void setUp() throws FailedQueryExecutionException {
-        connection = ConnectionManager.getConnection();
+        Connection connection = ConnectionManager.getConnection();
         try (Statement statement = connection.createStatement()) {
             statement.execute(JdbcConstants.CUSTOM_SEQUENCER);
             statement.execute(JdbcConstants.CREATE_ANIMAL_TABLE_QUERY);
         } catch (SQLException e) {
+            e.printStackTrace();
             throw new FailedQueryExecutionException();
         }
     }
 
     @AfterEach
-    void tearDown() {
+    void tearDown() throws FailedQueryExecutionException {
+        Connection connection = ConnectionManager.getConnection();
         try (Statement statement = connection.createStatement()) {
             statement.execute(JdbcConstants.ANIMAL_DROP_TABLE_QUERY);
             statement.execute(JdbcConstants.ANIMAL_DROP_SEQ_QUERY);
             ConnectionManager.getConnection().close();
         } catch (SQLException e) {
             e.printStackTrace();
+            throw new FailedQueryExecutionException();
         }
     }
 
@@ -61,15 +61,15 @@ class AnimalRepoIntegrationTest {
         Animal readAnimal = animalRepo.read(FIRST_ANIMAL_ID_1)
                 .orElseThrow(() -> new AnimalNotFoundException("Entity not found"));
 
-        Long readAnimalId = readAnimal.getId();
-        String readAnimalName = readAnimal.getName();
-        LocalDate readAnimalBirthDate = readAnimal.getBirthDate();
+        Long actualId = readAnimal.getId();
+        String actualName = readAnimal.getName();
+        LocalDate actualBirthDate = readAnimal.getBirthDate();
 
         //then
         Assertions.assertAll(
-                () -> Assertions.assertEquals(FIRST_ANIMAL_ID_1, readAnimalId, "Id are different"),
-                () -> Assertions.assertEquals(ANIMAL_ENTITY_NAME_JERRY, readAnimalName, "Names are different"),
-                () -> Assertions.assertEquals(ANIMAL_BIRTHDAY_01_01_2000, readAnimalBirthDate, "Birth dates are different")
+                () -> Assertions.assertEquals(FIRST_ANIMAL_ID_1, actualId, "Ids are different"),
+                () -> Assertions.assertEquals(ANIMAL_ENTITY_NAME_JERRY, actualName, "Names are different"),
+                () -> Assertions.assertEquals(ANIMAL_BIRTHDAY_01_01_2000, actualBirthDate, "Birth dates are different")
         );
     }
 
@@ -86,15 +86,15 @@ class AnimalRepoIntegrationTest {
 
         Animal updatedAnimal = animalRepo.update(animalAfterUpdate);
 
-        Long updatedAnimalId = updatedAnimal.getId();
-        String updatedAnimalName = updatedAnimal.getName();
-        LocalDate updatedAnimalBirthDate = updatedAnimal.getBirthDate();
+        Long actualId = updatedAnimal.getId();
+        String actualName = updatedAnimal.getName();
+        LocalDate actualBirthDate = updatedAnimal.getBirthDate();
 
         //then
         Assertions.assertAll(
-                () -> Assertions.assertEquals(FIRST_ANIMAL_ID_1, updatedAnimalId, "Ids are different"),
-                () -> Assertions.assertEquals(ANIMAL_ENTITY_NAME_UPDATED_JERRY, updatedAnimalName, "Names are different"),
-                () -> Assertions.assertEquals(UPDATE_ANIMAL_BIRTH_DATE_02_02_3000, updatedAnimalBirthDate, "Birth dates are different")
+                () -> Assertions.assertEquals(FIRST_ANIMAL_ID_1, actualId, "Ids are different"),
+                () -> Assertions.assertEquals(ANIMAL_ENTITY_NAME_UPDATED_JERRY, actualName, "Names are different"),
+                () -> Assertions.assertEquals(UPDATE_ANIMAL_BIRTH_DATE_02_02_3000, actualBirthDate, "Birth dates are different")
         );
 
     }

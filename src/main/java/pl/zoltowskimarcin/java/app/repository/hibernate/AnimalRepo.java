@@ -72,7 +72,7 @@ public class AnimalRepo implements AnimalDao {
         Transaction transaction = null;
         AnimalEntity updatedAnimal = AnimalMapper.mapToEntity(animal);
 
-        try (Session session = HibernateUtility.getSessionFactory().openSession();) {
+        try (Session session = HibernateUtility.getSessionFactory().openSession()) {
             transaction = session.beginTransaction();
             session.merge(updatedAnimal);
             transaction.commit();

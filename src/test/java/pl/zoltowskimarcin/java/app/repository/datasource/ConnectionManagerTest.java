@@ -1,24 +1,25 @@
-package pl.zoltowskimarcin.java.app.repository.jdbc;
+package pl.zoltowskimarcin.java.app.repository.datasource;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
+import pl.zoltowskimarcin.java.app.exceptions.FailedQueryExecutionException;
+import pl.zoltowskimarcin.java.app.repository.jdbc.ConnectionManager;
 
 import java.sql.Connection;
 import java.sql.SQLException;
 
 class ConnectionManagerTest {
 
-    public static final String TEST_RESOURCES_DATABASE_PROPERTIES_PATH = "src/test/resources/database.properties";
-    private Connection connection;
+    private static Connection connection;
 
     @AfterEach
-    public void closeConnection() {
+    public void closeConnection() throws FailedQueryExecutionException {
         try {
-            if (!ConnectionManager.getConnection().isClosed())
-                ConnectionManager.getConnection().close();
+            connection.close();
         } catch (SQLException e) {
             e.printStackTrace();
+            throw new FailedQueryExecutionException();
         }
     }
 
@@ -40,6 +41,7 @@ class ConnectionManagerTest {
 
         //when
         connection = ConnectionManager.getConnection();
+
         try {
             ConnectionManager.getConnection().close();
             isClosed = connection.isClosed();

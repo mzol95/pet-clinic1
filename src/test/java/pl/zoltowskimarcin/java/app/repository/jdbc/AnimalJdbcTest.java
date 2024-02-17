@@ -1,4 +1,4 @@
-package pl.zoltowskimarcin.java.app.repository;
+package pl.zoltowskimarcin.java.app.repository.jdbc;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
@@ -19,10 +19,8 @@ class AnimalJdbcTest {
     private static final String ANIMAL_NAME = "Dog";
     private static final LocalDate ANIMAL_BIRTH_DATE = LocalDate.of(2000, 1, 1);
 
-    private static Connection connection;
-
     @BeforeEach
-    public void setUpDatabase() throws SQLException {
+    public void setUp() throws SQLException {
         try (Connection connection = ConnectionManager.getConnection();
              Statement statement = connection.createStatement()) {
             statement.execute(JdbcConstants.CUSTOM_SEQUENCER);
@@ -32,7 +30,7 @@ class AnimalJdbcTest {
     }
 
     @AfterEach
-    public void cleanTable() {
+    public void tearDown() {
         try (Connection connection = ConnectionManager.getConnection();
              Statement statement = connection.createStatement()) {
             statement.execute(JdbcConstants.ANIMAL_DROP_TABLE_QUERY);
@@ -46,11 +44,11 @@ class AnimalJdbcTest {
     @Test
     void create() {
         //given
-        AnimalJdbc animalJDBC = new AnimalJdbc();
+        AnimalJdbc animalJdbc = new AnimalJdbc();
         Animal animal = new Animal(ANIMAL_NAME, ANIMAL_BIRTH_DATE);
 
         //when
-        Animal createdAnimal = animalJDBC.create(animal);
+        Animal createdAnimal = animalJdbc.create(animal);
         String createdAnimalName = createdAnimal.getName();
         LocalDate createdAnimalBirthDate = createdAnimal.getBirthDate();
 

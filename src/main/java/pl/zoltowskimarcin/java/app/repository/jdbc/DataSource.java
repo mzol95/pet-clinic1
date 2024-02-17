@@ -9,11 +9,8 @@ import java.sql.SQLException;
 
 public class DataSource {
 
-    private static HikariConfig config = new HikariConfig();
-    private static HikariDataSource ds;
-
-    private DataSource() {
-    }
+    private static final HikariConfig config = new HikariConfig();
+    private static final HikariDataSource ds;
 
     static {
         config.setJdbcUrl(PropertyManager.getProperty("dataSource.jdbcUrl"));
@@ -23,6 +20,9 @@ public class DataSource {
         config.addDataSourceProperty(PropertyManager.getProperty("dataSource.prepStmtCacheSize"), "250");
         config.addDataSourceProperty(PropertyManager.getProperty("dataSource.prepStmtCacheSqlLimit"), "2048");
         ds = new HikariDataSource(config);
+    }
+
+    private DataSource() {
     }
 
     public static Connection getConnection() throws SQLException {

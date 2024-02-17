@@ -11,7 +11,7 @@ public class AnimalMapper {
     private static ModelMapper modelMapper;
 
     public AnimalMapper(ModelMapper modelMapper) {
-        this.modelMapper = modelMapper;
+        AnimalMapper.modelMapper = modelMapper;
     }
 
     public static Animal mapToModel(AnimalEntity animalEntity) {

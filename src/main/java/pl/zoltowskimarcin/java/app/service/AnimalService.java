@@ -11,23 +11,22 @@ import java.util.logging.Logger;
 public class AnimalService {
     private static final Logger LOGGER = Logger.getLogger(AnimalService.class.getName());
 
-    private final AnimalDao animalJdbc;
+    private final AnimalDao animalDao;
 
-    public AnimalService(AnimalDao animalJdbc) {
-        this.animalJdbc = animalJdbc;
+    public AnimalService(AnimalDao animalDao) {
+        this.animalDao = animalDao;
     }
-
 
     public Animal create(Animal animal) throws AnimalCreateFaultException {
         LOGGER.info("create(" + animal + ")");
-        Animal createdAnimal = animalJdbc.create(animal);
+        Animal createdAnimal = animalDao.create(animal);
         LOGGER.info("create(...) = " + createdAnimal);
         return createdAnimal;
     }
 
     public Animal read(Long id) throws AnimalNotFoundException, AnimalReadFaultException {
         LOGGER.info("read(id:  " + id + ")");
-        Animal recivedAnimal = animalJdbc.read(id)
+        Animal recivedAnimal = animalDao.read(id)
                 .orElseThrow(() -> new AnimalNotFoundException("Entity does not exist in database"));
         LOGGER.info("read(...) = " + recivedAnimal);
         return recivedAnimal;
@@ -35,15 +34,14 @@ public class AnimalService {
 
     public Animal update(Animal animal) throws AnimalUpdateFaultException {
         LOGGER.info("update(" + animal + ")");
-        Animal resultAnimal = animalJdbc.update(animal);
+        Animal resultAnimal = animalDao.update(animal);
         LOGGER.info("update(...) = " + resultAnimal);
         return resultAnimal;
     }
 
     public boolean delete(Long id) throws AnimalDeleteFaultException {
-        boolean result;
         LOGGER.info("delete(id: " + id + ")");
-        result = animalJdbc.delete(id);
+        boolean result = animalDao.delete(id);
         LOGGER.info("delete(...) " + (result ? "succeed" : "not succeed"));
         return result;
     }
