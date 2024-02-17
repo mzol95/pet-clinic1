@@ -18,9 +18,10 @@ public class AnimalJdbc implements AnimalDao {
     public Animal create(Animal animal) {
         LOGGER.info("create(" + animal + ")");
 
-
         try (Connection connection = ConnectionManager.getInstance();
-             PreparedStatement createStatement = connection.prepareStatement(JdbcConstants.ANIMAL_INSERT_QUERY, Statement.RETURN_GENERATED_KEYS)) {
+             PreparedStatement createStatement = connection.prepareStatement(JdbcConstants.ANIMAL_INSERT_QUERY,
+                     Statement.RETURN_GENERATED_KEYS)) {
+
             createStatement.setString(1, animal.getName());
             createStatement.setDate(2, Date.valueOf(animal.getBirthDate()));
             createStatement.execute();
@@ -30,8 +31,8 @@ public class AnimalJdbc implements AnimalDao {
                     animal.setId(rs.getLong(1));
                 }
             }
-        } catch (SQLException sqlException) {
-            LOGGER.log(Level.SEVERE, sqlException.getMessage());
+        } catch (SQLException e) {
+            LOGGER.log(Level.SEVERE, "Creating animal failed", e);
         }
 
         LOGGER.info("create(...) = " + animal);
@@ -43,6 +44,7 @@ public class AnimalJdbc implements AnimalDao {
 
         try (Connection connection = ConnectionManager.getInstance();
              PreparedStatement readStatement = connection.prepareStatement(JdbcConstants.ANIMAL_SELECT_QUERY)) {
+
             readStatement.setLong(1, id);
 
             try (ResultSet resultSet = readStatement.executeQuery()) {
@@ -58,8 +60,8 @@ public class AnimalJdbc implements AnimalDao {
                     return Optional.ofNullable(recivedAnimal);
                 }
             }
-        } catch (SQLException sqlException) {
-            LOGGER.severe(sqlException.getMessage());
+        } catch (SQLException e) {
+            LOGGER.log(Level.SEVERE, "Reading animal failed", e);
         }
 
         return Optional.empty();
@@ -75,8 +77,8 @@ public class AnimalJdbc implements AnimalDao {
             updateStatement.setLong(3, animal.getId());
             updateStatement.executeUpdate();
             LOGGER.info("update (id: " + animal.getId() + ") succeed");
-        } catch (SQLException sqlException) {
-            LOGGER.log(Level.SEVERE, sqlException.getMessage());
+        } catch (SQLException e) {
+            LOGGER.log(Level.SEVERE, "Updating animal failed", e);
         }
         return animal;
     }
@@ -91,8 +93,9 @@ public class AnimalJdbc implements AnimalDao {
             LOGGER.info("delete (id: " + id + ") succeed");
             return true;
         } catch (SQLException e) {
-            LOGGER.severe(e.getMessage());
+            LOGGER.log(Level.SEVERE, "Deleting animal failed", e);
         }
+
         LOGGER.info("delete (id: " + id + ") not succeed");
         return false;
     }
