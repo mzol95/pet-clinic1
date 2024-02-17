@@ -5,8 +5,8 @@ import org.junit.jupiter.api.Test;
 
 class PropertyManagerTest {
 
+    public static final String JDBC_URL_FROM_JDBC_PROPERTIES = "dataSource.jdbcUrl";
     public static final String JDBC_H_2_MEM_TEST_DB_CLOSE_DELAY_1 = "jdbc:h2:mem:test;DB_CLOSE_DELAY=-1";
-    public static final String JDBC_URL_FROM_JDBC_PROPERTIES = "jdbcUrl";
 
     @Test
     void getProperty() {
