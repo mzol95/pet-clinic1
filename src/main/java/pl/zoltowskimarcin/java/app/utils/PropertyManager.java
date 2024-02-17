@@ -1,5 +1,7 @@
 package pl.zoltowskimarcin.java.app.utils;
 
+import pl.zoltowskimarcin.java.app.exceptions.PropertyManagerException;
+
 import java.io.FileInputStream;
 import java.io.InputStream;
 import java.util.Properties;
@@ -14,7 +16,7 @@ public class PropertyManager {
     private static PropertyManager propertyManager;
     private static Properties properties;
 
-    private PropertyManager() {
+    private PropertyManager() throws PropertyManagerException {
         properties = new Properties();
 
         try {
@@ -24,13 +26,17 @@ public class PropertyManager {
             properties.load(inputStream);
         } catch (Exception e) {
             LOGGER.log(Level.SEVERE, "Something went wrong", e);
-            //throw new P //todo
-        }
+            throw new PropertyManagerException();
+    }
     }
 
     public static PropertyManager getInstance() {
         if (propertyManager == null) {
-            propertyManager = new PropertyManager();
+            try {
+                propertyManager = new PropertyManager();
+            } catch (PropertyManagerException e) {
+                e.printStackTrace();
+            }
         }
 
         return propertyManager;

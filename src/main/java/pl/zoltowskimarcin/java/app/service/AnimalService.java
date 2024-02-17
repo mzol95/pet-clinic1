@@ -26,7 +26,7 @@ public class AnimalService {
         return createdAnimal;
     }
 
-    public Animal read(Long id) {
+    public Animal read(Long id) throws AnimalNotFoundException {
         LOGGER.info("read(id:  " + id + ")");
         Animal recivedAnimal = animalJdbc.read(id)
                 .orElseThrow(() -> new AnimalNotFoundException("Entity does not exist in database"));

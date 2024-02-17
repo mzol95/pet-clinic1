@@ -50,7 +50,7 @@ class AnimalJdbcIntegrationTest {
 
 
     @Test
-    void read() {
+    void read() throws AnimalNotFoundException {
         //given
         AnimalJdbc animalJDBC = new AnimalJdbc();
         Animal animal = new Animal(ANIMAL_NAME, ANIMAL_BIRTH_DATE);

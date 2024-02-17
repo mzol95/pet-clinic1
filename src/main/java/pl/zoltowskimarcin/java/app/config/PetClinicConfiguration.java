@@ -10,7 +10,7 @@ import java.sql.SQLException;
 
 @Configuration
 public class PetClinicConfiguration {
-    @Bean
+    //@Bean
     public Connection getJdbcConnection() {
 
         Connection connection = null;

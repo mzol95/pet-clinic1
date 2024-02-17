@@ -1,6 +1,7 @@
 package pl.zoltowskimarcin.java.app.web.controller;
 
 import org.springframework.stereotype.Controller;
+import pl.zoltowskimarcin.java.app.exceptions.AnimalNotFoundException;
 import pl.zoltowskimarcin.java.app.service.AnimalService;
 import pl.zoltowskimarcin.java.app.web.model.Animal;
 
@@ -25,7 +26,7 @@ public class AnimalController {
         return createdAnimal;
     }
 
-    public Animal read(Long id) {
+    public Animal read(Long id) throws AnimalNotFoundException {
         LOGGER.info("read(id: " + id + ")");
         Animal readAnimal = animalService.read(id);
         LOGGER.info("read(...) = " + readAnimal);

@@ -1,7 +1,7 @@
 package pl.zoltowskimarcin.java.app.exceptions;
 
 
-public class AnimalNotFoundException extends RuntimeException {
+public class AnimalNotFoundException extends Exception {
 
     public AnimalNotFoundException() {
     }

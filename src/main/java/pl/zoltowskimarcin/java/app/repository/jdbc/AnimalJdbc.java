@@ -14,28 +14,6 @@ public class AnimalJdbc implements AnimalDao {
 
     private static final Logger LOGGER = Logger.getLogger(AnimalJdbc.class.getName());
 
-
-    //todo 4. W klasie zarządzającej połączeniem z bazą danych użyć nowej klasy
-
-    //todo 2: skoro ConnectionManager jest singletonem to czy go wstrzykiwać w klase czy używać jak SessionFactory
-    //todo 2: czy połączenie otwieramy i zamykamy w każdej metodzie czy operujemy nim z poziomu klasy wywołującej metody
-    //todo 3: dlaczego testy tak długo się wykonują - baza danych?
-    //todo 4: uporządkować strukturę 2 klasy implementujące dao
-
-    /*
-        otwieranie polaczenia
-            metoda
-            metoda
-            metoda
-        zamykanie
-
-        czy
-
-        metoda -> otwieranie, zamykanie
-        metoda -> otwieranie, zamykanie
-        metoda -> otwieranie, zamykanie
-    * */
-
     @Override
     public Animal create(Animal animal) {
         LOGGER.info("create(" + animal + ")");

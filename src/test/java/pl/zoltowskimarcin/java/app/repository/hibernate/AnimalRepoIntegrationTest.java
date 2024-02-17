@@ -35,7 +35,7 @@ class AnimalRepoIntegrationTest {
             statement.execute(JdbcConstants.CUSTOM_SEQUENCER);
             statement.execute(JdbcConstants.CREATE_ANIMAL_TABLE_QUERY);
         } catch (SQLException e) {
-            throw new FailedQueryExecutionException(); //todo 08.02.24 - done
+            throw new FailedQueryExecutionException();
         }
     }
 
@@ -52,7 +52,7 @@ class AnimalRepoIntegrationTest {
 
 
     @Test
-    void read() {
+    void read() throws AnimalNotFoundException {
         //given
         AnimalRepo animalRepo = new AnimalRepo();
         Animal animal = new Animal(ANIMAL_ENTITY_NAME_JERRY, ANIMAL_BIRTHDAY_01_01_2000);
