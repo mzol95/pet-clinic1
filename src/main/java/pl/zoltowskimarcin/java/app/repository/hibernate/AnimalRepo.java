@@ -10,6 +10,7 @@ import pl.zoltowskimarcin.java.app.utils.HibernateUtility;
 import pl.zoltowskimarcin.java.app.web.model.Animal;
 
 import java.util.Optional;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 @Repository
@@ -21,13 +22,10 @@ public class AnimalRepo implements AnimalDao {
     public Animal create(Animal animal) {
         LOGGER.info("create(" + animal + ")");
 
-        //todo AnimalMapper
         AnimalEntity animalToPersist = AnimalMapper.mapToEntity(animal);
-
-        Session session = HibernateUtility.getSessionFactory().openSession();
         Transaction transaction = null;
 
-        try {
+        try (Session session = HibernateUtility.getSessionFactory().openSession()) {
             transaction = session.beginTransaction();
             session.persist(animalToPersist);
             transaction.commit();
@@ -36,12 +34,9 @@ public class AnimalRepo implements AnimalDao {
             if (transaction != null) {
                 transaction.rollback();
             }
-            e.printStackTrace();
-        } finally {
-            if (session != null) {
-                session.close();
-            }
+            LOGGER.log(Level.SEVERE, "Creating animal failed ", e);
         }
+
         LOGGER.info("create(...) = " + animal);
         return animal;
     }
@@ -49,11 +44,13 @@ public class AnimalRepo implements AnimalDao {
     @Override
     public Optional<Animal> read(Long id) {
         LOGGER.info("read(id:  " + id + ")");
+
         AnimalEntity readAnimal;
 
         try (Session session = HibernateUtility.getSessionFactory().openSession()) {
             readAnimal = session.find(AnimalEntity.class, id);
         }
+
         Animal animal = AnimalMapper.mapToModel(readAnimal);
 
         LOGGER.info("read(...) = " + animal);
@@ -63,12 +60,11 @@ public class AnimalRepo implements AnimalDao {
     @Override
     public Animal update(Animal animal) {
         LOGGER.info("update(" + animal + ")");
-        Session session = HibernateUtility.getSessionFactory().openSession();
-        Transaction transaction = null;
 
+        Transaction transaction = null;
         AnimalEntity updatedAnimal = AnimalMapper.mapToEntity(animal);
 
-        try {
+        try (Session session = HibernateUtility.getSessionFactory().openSession();) {
             transaction = session.beginTransaction();
             session.merge(updatedAnimal);
             transaction.commit();
@@ -76,12 +72,9 @@ public class AnimalRepo implements AnimalDao {
             if (transaction != null) {
                 transaction.rollback();
             }
-            e.printStackTrace();
-        } finally {
-            if (session != null) {
-                session.close();
-            }
+            LOGGER.log(Level.SEVERE, "Updating animal failed ", e);
         }
+
         LOGGER.info("update(...) = " + updatedAnimal);
         return animal;
     }
@@ -89,6 +82,7 @@ public class AnimalRepo implements AnimalDao {
     @Override
     public boolean delete(Long id) {
         LOGGER.info("delete(id: " + id + ")");
+
         try (Session session = HibernateUtility.getSessionFactory().openSession()) {
             AnimalEntity animalToRemove = session.get(AnimalEntity.class, id);
             if (animalToRemove != null) {
