@@ -1,6 +1,9 @@
 package pl.zoltowskimarcin.java.app.repository;
 
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import pl.zoltowskimarcin.java.app.repository.jdbc.AnimalJdbc;
 import pl.zoltowskimarcin.java.app.repository.jdbc.ConnectionManager;
 import pl.zoltowskimarcin.java.app.utils.JdbcConstants;
@@ -20,10 +23,7 @@ class AnimalJdbcTest {
 
     @BeforeEach
     public void setUpDatabase() throws SQLException {
-        ConnectionManager.setPath("src/test/resources/database.properties");
-
-
-        try (Connection connection = ConnectionManager.getInstance();
+        try (Connection connection = ConnectionManager.getConnection();
              Statement statement = connection.createStatement()) {
             statement.execute(JdbcConstants.CUSTOM_SEQUENCER);
             statement.execute(JdbcConstants.CREATE_ANIMAL_TABLE_QUERY);
@@ -33,11 +33,11 @@ class AnimalJdbcTest {
 
     @AfterEach
     public void cleanTable() {
-        try (Connection connection = ConnectionManager.getInstance();
+        try (Connection connection = ConnectionManager.getConnection();
              Statement statement = connection.createStatement()) {
             statement.execute(JdbcConstants.ANIMAL_DROP_TABLE_QUERY);
             statement.execute(JdbcConstants.ANIMAL_DROP_SEQ_QUERY);
-            ConnectionManager.getInstance().close();
+            ConnectionManager.getConnection().close();
         } catch (SQLException e) {
             e.printStackTrace();
         }

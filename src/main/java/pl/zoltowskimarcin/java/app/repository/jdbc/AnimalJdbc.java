@@ -18,7 +18,7 @@ public class AnimalJdbc implements AnimalDao {
     public Animal create(Animal animal) {
         LOGGER.info("create(" + animal + ")");
 
-        try (Connection connection = ConnectionManager.getInstance();
+        try (Connection connection = ConnectionManager.getConnection();
              PreparedStatement createStatement = connection.prepareStatement(JdbcConstants.ANIMAL_INSERT_QUERY,
                      Statement.RETURN_GENERATED_KEYS)) {
 
@@ -42,7 +42,7 @@ public class AnimalJdbc implements AnimalDao {
     public Optional<Animal> read(Long id) {
         LOGGER.info("read (id: " + id + ")");
 
-        try (Connection connection = ConnectionManager.getInstance();
+        try (Connection connection = ConnectionManager.getConnection();
              PreparedStatement readStatement = connection.prepareStatement(JdbcConstants.ANIMAL_SELECT_QUERY)) {
 
             readStatement.setLong(1, id);
@@ -70,7 +70,7 @@ public class AnimalJdbc implements AnimalDao {
     public Animal update(Animal animal) {
         LOGGER.info("update (" + animal + ")");
 
-        try (Connection connection = ConnectionManager.getInstance();
+        try (Connection connection = ConnectionManager.getConnection();
              PreparedStatement updateStatement = connection.prepareStatement(JdbcConstants.ANIMAL_UPDATE_QUERY)) {
             updateStatement.setString(1, animal.getName());
             updateStatement.setDate(2, Date.valueOf(animal.getBirthDate()));
@@ -86,7 +86,7 @@ public class AnimalJdbc implements AnimalDao {
     public boolean delete(Long id) {
         LOGGER.info("delete (id: " + id + ")");
 
-        try (Connection connection = ConnectionManager.getInstance();
+        try (Connection connection = ConnectionManager.getConnection();
              PreparedStatement deleteStatement = connection.prepareStatement(JdbcConstants.ANIMAL_DELETE_QUERY)) {
             deleteStatement.setLong(1, id);
             deleteStatement.executeUpdate();

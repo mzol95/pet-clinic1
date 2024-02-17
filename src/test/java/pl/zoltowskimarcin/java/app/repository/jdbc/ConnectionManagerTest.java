@@ -15,8 +15,8 @@ class ConnectionManagerTest {
     @AfterEach
     public void closeConnection() {
         try {
-            if (!ConnectionManager.getInstance().isClosed())
-                ConnectionManager.getInstance().close();
+            if (!ConnectionManager.getConnection().isClosed())
+                ConnectionManager.getConnection().close();
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -25,10 +25,9 @@ class ConnectionManagerTest {
     @Test
     void connection_is_not_null() {
         //given
-        ConnectionManager.setPath("src/test/resources/database.properties");
-        //when
 
-        connection = ConnectionManager.getInstance();
+        //when
+        connection = ConnectionManager.getConnection();
 
         //then
         Assertions.assertNotNull(connection);
@@ -40,9 +39,9 @@ class ConnectionManagerTest {
         boolean isClosed = false;
 
         //when
-        connection = ConnectionManager.getInstance();
+        connection = ConnectionManager.getConnection();
         try {
-            ConnectionManager.getInstance().close();
+            ConnectionManager.getConnection().close();
             isClosed = connection.isClosed();
         } catch (SQLException e) {
             e.printStackTrace();

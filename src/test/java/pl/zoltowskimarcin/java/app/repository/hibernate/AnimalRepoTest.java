@@ -27,7 +27,7 @@ class AnimalRepoTest {
     @BeforeEach
     void setUp() {
 
-        connection = ConnectionManager.getInstance();
+        connection = ConnectionManager.getConnection();
 
         try (Statement statement = connection.createStatement()) {
             statement.execute(JdbcConstants.CUSTOM_SEQUENCER);
@@ -57,7 +57,7 @@ class AnimalRepoTest {
         try (Statement statement = connection.createStatement()) {
             statement.execute(JdbcConstants.ANIMAL_DROP_TABLE_QUERY);
             statement.execute(JdbcConstants.ANIMAL_DROP_SEQ_QUERY);
-            ConnectionManager.getInstance().close();
+            ConnectionManager.getConnection().close();
         } catch (SQLException e) {
             e.printStackTrace();
         }
