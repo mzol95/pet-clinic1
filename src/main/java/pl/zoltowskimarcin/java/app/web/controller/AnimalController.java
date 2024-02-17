@@ -1,10 +1,13 @@
 package pl.zoltowskimarcin.java.app.web.controller;
 
+import org.springframework.stereotype.Controller;
 import pl.zoltowskimarcin.java.app.service.AnimalService;
 import pl.zoltowskimarcin.java.app.web.model.Animal;
 
 import java.util.logging.Logger;
 
+//todo restowy controller + testy w postmanie
+@Controller
 public class AnimalController {
 
     private static final Logger LOGGER = Logger.getLogger(AnimalController.class.getName());

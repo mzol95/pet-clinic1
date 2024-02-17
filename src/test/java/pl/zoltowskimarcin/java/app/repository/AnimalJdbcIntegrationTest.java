@@ -1,6 +1,9 @@
 package pl.zoltowskimarcin.java.app.repository;
 
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import pl.zoltowskimarcin.java.app.exceptions.AnimalNotFoundException;
 import pl.zoltowskimarcin.java.app.repository.jdbc.AnimalJdbc;
 import pl.zoltowskimarcin.java.app.repository.jdbc.ConnectionManager;
@@ -20,13 +23,13 @@ class AnimalJdbcIntegrationTest {
     private static final LocalDate ANIMAL_BIRTH_DATE = LocalDate.of(2000, 1, 1);
     private static final LocalDate UPDATE_ANIMAL_BIRTH_DATE = LocalDate.of(3000, 2, 2);
     private static final long ANIMAL_ID = 1L;
-    private static Connection connection;
+
 
     @BeforeEach
     public void setUpDatabase() throws SQLException {
         ConnectionManager.setPath("src/test/resources/database.properties");
-        connection = ConnectionManager.getInstance();
-        try (Statement statement = connection.createStatement()) {
+        try (Connection connection = ConnectionManager.getInstance();
+                Statement statement = connection.createStatement()) {
             statement.execute(JdbcConstants.CUSTOM_SEQUENCER);
             statement.execute(JdbcConstants.CREATE_ANIMAL_TABLE_QUERY);
         }
@@ -35,7 +38,8 @@ class AnimalJdbcIntegrationTest {
 
     @AfterEach
     public void cleanTable() {
-        try (Statement statement = connection.createStatement()) {
+        try (Connection connection = ConnectionManager.getInstance();
+             Statement statement = connection.createStatement()) {
             statement.execute(JdbcConstants.ANIMAL_DROP_TABLE_QUERY);
             statement.execute(JdbcConstants.ANIMAL_DROP_SEQ_QUERY);
             ConnectionManager.getInstance().close();
@@ -48,7 +52,7 @@ class AnimalJdbcIntegrationTest {
     @Test
     void read() {
         //given
-        AnimalJdbc animalJDBC = new AnimalJdbc(connection);
+        AnimalJdbc animalJDBC = new AnimalJdbc();
         Animal animal = new Animal(ANIMAL_NAME, ANIMAL_BIRTH_DATE);
 
         //when
@@ -64,9 +68,24 @@ class AnimalJdbcIntegrationTest {
     }
 
     @Test
+    void delete() {
+        //given
+        AnimalJdbc animalJDBC = new AnimalJdbc();
+        Animal animal = new Animal(ANIMAL_NAME, ANIMAL_BIRTH_DATE);
+
+        //when
+        Animal createdAnimal = animalJDBC.create(animal);
+        animalJDBC.delete(createdAnimal.getId());
+        Optional<Animal> readAnimal = animalJDBC.read(ANIMAL_ID);
+
+        //then
+        Assertions.assertEquals(Optional.empty(), readAnimal, "Object still exists in database");
+    }
+
+    @Test
     void update() {
         //given
-        AnimalJdbc animalJDBC = new AnimalJdbc(connection);
+        AnimalJdbc animalJDBC = new AnimalJdbc();
         Animal animal = new Animal(ANIMAL_NAME, ANIMAL_BIRTH_DATE);
         Animal newAnimal = new Animal(UPDATE_ANIMAL_NAME, UPDATE_ANIMAL_BIRTH_DATE);
 
@@ -81,20 +100,5 @@ class AnimalJdbcIntegrationTest {
                 () -> Assertions.assertEquals(UPDATE_ANIMAL_BIRTH_DATE, updatedAnimal.getBirthDate(), "Animal birthday date don't match")
         );
 
-    }
-
-    @Test
-    void delete() {
-        //given
-        AnimalJdbc animalJDBC = new AnimalJdbc(connection);
-        Animal animal = new Animal(ANIMAL_NAME, ANIMAL_BIRTH_DATE);
-
-        //when
-        Animal createdAnimal = animalJDBC.create(animal);
-        animalJDBC.delete(createdAnimal.getId());
-        Optional<Animal> readAnimal = animalJDBC.read(ANIMAL_ID);
-
-        //then
-        Assertions.assertEquals(Optional.empty(), readAnimal, "Object still exists in database");
     }
 }

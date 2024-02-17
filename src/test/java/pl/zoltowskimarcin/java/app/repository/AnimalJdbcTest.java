@@ -20,10 +20,11 @@ class AnimalJdbcTest {
 
     @BeforeEach
     public void setUpDatabase() throws SQLException {
-
         ConnectionManager.setPath("src/test/resources/database.properties");
-        connection = ConnectionManager.getInstance();
-        try (Statement statement = connection.createStatement()) {
+
+
+        try (Connection connection = ConnectionManager.getInstance();
+             Statement statement = connection.createStatement()) {
             statement.execute(JdbcConstants.CUSTOM_SEQUENCER);
             statement.execute(JdbcConstants.CREATE_ANIMAL_TABLE_QUERY);
         }
@@ -32,7 +33,8 @@ class AnimalJdbcTest {
 
     @AfterEach
     public void cleanTable() {
-        try (Statement statement = connection.createStatement()) {
+        try (Connection connection = ConnectionManager.getInstance();
+             Statement statement = connection.createStatement()) {
             statement.execute(JdbcConstants.ANIMAL_DROP_TABLE_QUERY);
             statement.execute(JdbcConstants.ANIMAL_DROP_SEQ_QUERY);
             ConnectionManager.getInstance().close();
@@ -44,7 +46,7 @@ class AnimalJdbcTest {
     @Test
     void create() {
         //given
-        AnimalJdbc animalJDBC = new AnimalJdbc(connection);
+        AnimalJdbc animalJDBC = new AnimalJdbc();
         Animal animal = new Animal(ANIMAL_NAME, ANIMAL_BIRTH_DATE);
 
         //when

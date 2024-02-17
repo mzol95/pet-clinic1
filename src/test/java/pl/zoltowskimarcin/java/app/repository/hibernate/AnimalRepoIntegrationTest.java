@@ -23,6 +23,9 @@ class AnimalRepoIntegrationTest {
     private static final String ANIMAL_ENTITY_NAME_UPDATED_JERRY = "UpdatedJerry";
     private Connection connection;
 
+
+
+
     //todo nowo otwarte połączenie - done
     @BeforeEach
     void setUp() throws FailedQueryExecutionException {

@@ -20,6 +20,9 @@ public class ConnectionManager {
     private ConnectionManager() {
     }
 
+
+
+
     public static Connection getInstance() {
         try {
             if (connectionManager == null || connection.isClosed()) {

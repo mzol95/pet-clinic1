@@ -3,6 +3,7 @@ package pl.zoltowskimarcin.java.app.web.model;
 import java.time.LocalDate;
 import java.util.Objects;
 
+
 public class Animal {
 
     private Long id;

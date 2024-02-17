@@ -2,7 +2,7 @@ package pl.zoltowskimarcin.java.app.repository.hibernate;
 
 import org.hibernate.Session;
 import org.hibernate.Transaction;
-import pl.zoltowskimarcin.java.app.exceptions.AnimalCreateFaultException;
+import org.springframework.stereotype.Repository;
 import pl.zoltowskimarcin.java.app.mapper.ModelMapperManager;
 import pl.zoltowskimarcin.java.app.repository.AnimalDao;
 import pl.zoltowskimarcin.java.app.repository.entity.AnimalEntity;
@@ -12,17 +12,16 @@ import pl.zoltowskimarcin.java.app.web.model.Animal;
 import java.util.Optional;
 import java.util.logging.Logger;
 
+@Repository
 public class AnimalRepo implements AnimalDao {
-
-    //todo 08.02.24 zmienic sessinFactory na singleton - done
 
     private static final Logger LOGGER = Logger.getLogger(AnimalRepo.class.getName());
 
-    //todo 08.02.2024 dodac model mapper - done
     @Override
     public Animal create(Animal animal) {
         LOGGER.info("create(" + animal + ")");
 
+        //todo AnimalMapper
         AnimalEntity animalToPersist = ModelMapperManager.getModelMapper().map(animal, AnimalEntity.class);
 
         Session session = HibernateUtility.getSessionFactory().openSession();
