@@ -2,6 +2,7 @@ package pl.zoltowskimarcin.java.app.repository.hibernate;
 
 import org.hibernate.Session;
 import org.hibernate.Transaction;
+import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Repository;
 import pl.zoltowskimarcin.java.app.exceptions.animal.AnimalCreateFaultException;
 import pl.zoltowskimarcin.java.app.exceptions.animal.AnimalDeleteFaultException;
@@ -21,6 +22,8 @@ import java.util.logging.Logger;
 public class AnimalRepo implements AnimalDao {
 
     private static final Logger LOGGER = Logger.getLogger(AnimalRepo.class.getName());
+
+
 
     @Override
     public Animal create(Animal animal) throws AnimalCreateFaultException {

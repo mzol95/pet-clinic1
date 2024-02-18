@@ -16,7 +16,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.time.LocalDate;
 
-@SpringBootTest
+
 class AnimalRepoIntegrationTest {
     private static final long FIRST_ANIMAL_ID_1 = 1L;
     private static final LocalDate ANIMAL_BIRTHDAY_01_01_2000 = LocalDate.of(2000, 1, 1);

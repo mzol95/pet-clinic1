@@ -8,10 +8,9 @@ import pl.zoltowskimarcin.java.app.web.model.Animal;
 @Component
 public class AnimalMapper {
 
-    private static ModelMapper modelMapper;
+    private static ModelMapper modelMapper = new ModelMapper();
 
-    public AnimalMapper(ModelMapper modelMapper) {
-        AnimalMapper.modelMapper = modelMapper;
+    private AnimalMapper() {
     }
 
     public static Animal mapToModel(AnimalEntity animalEntity) {
