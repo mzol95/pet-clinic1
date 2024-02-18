@@ -28,7 +28,7 @@ public class AnimalController {
 
     public Animal read(Long id) throws AnimalNotFoundException, AnimalReadFaultException {
         LOGGER.info("read(id: " + id + ")");
-        Animal readAnimal = animalService.read(id);
+        Animal readAnimal = animalService.read(id).orElseThrow(() -> new AnimalNotFoundException());
         LOGGER.info("read(...) = " + readAnimal);
         return null;
     }

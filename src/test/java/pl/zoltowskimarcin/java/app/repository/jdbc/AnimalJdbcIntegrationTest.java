@@ -20,7 +20,7 @@ class AnimalJdbcIntegrationTest {
     private static final String UPDATE_ANIMAL_NAME = "UpdatedJerry";
     private static final LocalDate ANIMAL_BIRTH_DATE = LocalDate.of(2000, 1, 1);
     private static final LocalDate UPDATE_ANIMAL_BIRTH_DATE = LocalDate.of(3000, 2, 2);
-    private static final long ANIMAL_ID = 1L;
+    private static final long ANIMAL_ID_1 = 1L;
 
 
     @BeforeEach
@@ -39,7 +39,6 @@ class AnimalJdbcIntegrationTest {
              Statement statement = connection.createStatement()) {
             statement.execute(JdbcConstants.ANIMAL_DROP_TABLE_QUERY);
             statement.execute(JdbcConstants.ANIMAL_DROP_SEQ_QUERY);
-            ConnectionManager.getConnection().close();
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -66,20 +65,6 @@ class AnimalJdbcIntegrationTest {
         );
     }
 
-    @Test
-    void delete() {
-        //given
-        AnimalJdbc animalJdbc = new AnimalJdbc();
-        Animal animal = new Animal(ANIMAL_NAME, ANIMAL_BIRTH_DATE);
-
-        //when
-        Animal createdAnimal = animalJdbc.create(animal);
-        animalJdbc.delete(createdAnimal.getId());
-        Optional<Animal> readAnimal = animalJdbc.read(ANIMAL_ID);
-
-        //then
-        Assertions.assertEquals(Optional.empty(), readAnimal, "Object still exists in database");
-    }
 
     @Test
     void update() {
@@ -103,4 +88,21 @@ class AnimalJdbcIntegrationTest {
         );
 
     }
+
+    @Test
+    void delete() {
+        //given
+        AnimalJdbc animalJdbc = new AnimalJdbc();
+        Animal animal = new Animal(ANIMAL_NAME, ANIMAL_BIRTH_DATE);
+
+        //when
+        Animal createdAnimal = animalJdbc.create(animal);
+        animalJdbc.delete(createdAnimal.getId());
+        Optional<Animal> readAnimal = animalJdbc.read(ANIMAL_ID_1);
+
+        //then
+        Assertions.assertEquals(Optional.empty(), readAnimal, "Object still exists in database");
+    }
+
+
 }

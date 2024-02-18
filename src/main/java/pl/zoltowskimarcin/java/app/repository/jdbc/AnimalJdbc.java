@@ -1,5 +1,6 @@
 package pl.zoltowskimarcin.java.app.repository.jdbc;
 
+import org.springframework.stereotype.Repository;
 import pl.zoltowskimarcin.java.app.repository.AnimalDao;
 import pl.zoltowskimarcin.java.app.utils.JdbcConstants;
 import pl.zoltowskimarcin.java.app.web.model.Animal;
@@ -10,6 +11,7 @@ import java.util.Optional;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+@Repository
 public class AnimalJdbc implements AnimalDao {
 
     private static final Logger LOGGER = Logger.getLogger(AnimalJdbc.class.getName());

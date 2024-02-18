@@ -4,8 +4,6 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import pl.zoltowskimarcin.java.app.repository.jdbc.AnimalJdbc;
-import pl.zoltowskimarcin.java.app.repository.jdbc.ConnectionManager;
 import pl.zoltowskimarcin.java.app.utils.JdbcConstants;
 import pl.zoltowskimarcin.java.app.web.model.Animal;
 
@@ -18,6 +16,7 @@ class AnimalJdbcTest {
 
     private static final String ANIMAL_NAME = "Dog";
     private static final LocalDate ANIMAL_BIRTH_DATE = LocalDate.of(2000, 1, 1);
+
 
     @BeforeEach
     public void setUp() throws SQLException {
@@ -35,7 +34,6 @@ class AnimalJdbcTest {
              Statement statement = connection.createStatement()) {
             statement.execute(JdbcConstants.ANIMAL_DROP_TABLE_QUERY);
             statement.execute(JdbcConstants.ANIMAL_DROP_SEQ_QUERY);
-            ConnectionManager.getConnection().close();
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -58,5 +56,6 @@ class AnimalJdbcTest {
                 () -> Assertions.assertEquals(ANIMAL_BIRTH_DATE, createdAnimalBirthDate, "Animal objects birthday dates don't match")
         );
     }
+
 
 }

@@ -19,7 +19,6 @@ class AnimalRepoTest {
     public static final long FIRST_ANIMAL_ID_1 = 1L;
     private static final LocalDate ANIMAL_BIRTHDAY_01_01_2000 = LocalDate.of(2000, 1, 1);
     private static final String ANIMAL_ENTITY_NAME_JERRY = "Jerry";
-    private Connection connection;
 
     @BeforeEach
     void setUp() throws FailedQueryExecutionException {
@@ -40,7 +39,6 @@ class AnimalRepoTest {
              Statement statement = connection.createStatement()) {
             statement.execute(JdbcConstants.ANIMAL_DROP_TABLE_QUERY);
             statement.execute(JdbcConstants.ANIMAL_DROP_SEQ_QUERY);
-            ConnectionManager.getConnection().close();
         } catch (SQLException e) {
             e.printStackTrace();
             throw new FailedQueryExecutionException();

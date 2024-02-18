@@ -91,15 +91,20 @@ public class AnimalRepo implements AnimalDao {
     @Override
     public boolean delete(Long id) throws AnimalDeleteFaultException {
         LOGGER.info("delete(id: " + id + ")");
-
+        Transaction transaction = null;
         try (Session session = HibernateUtility.getSessionFactory().openSession()) {
             AnimalEntity animalToRemove = session.get(AnimalEntity.class, id);
             if (animalToRemove != null) {
+                transaction = session.beginTransaction();
                 session.remove(animalToRemove);
                 LOGGER.info("delete (id: " + id + " succeed");
+                transaction.commit();
                 return true;
             }
         } catch (Exception e) {
+            if (transaction != null) {
+                transaction.rollback();
+            }
             LOGGER.log(Level.SEVERE, "Deleting animal fault", e);
             throw new AnimalDeleteFaultException("Deleting animal fault");
         }

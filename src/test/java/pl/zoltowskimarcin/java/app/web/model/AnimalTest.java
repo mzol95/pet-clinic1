@@ -8,9 +8,9 @@ import java.time.LocalDate;
 
 class AnimalTest {
 
-    private static String ANIMAL_POJO_NAME_JERRY = "Jerry";
-    private static LocalDate ANIMAL_BIRTHDAY_01_01_2000 = LocalDate.of(2000, 1, 1);
-    private static int ANIMAL_VISIT_LIST_SIZE = 2;
+    private static final String ANIMAL_POJO_NAME_JERRY = "Jerry";
+    private static final LocalDate ANIMAL_BIRTHDAY_01_01_2000 = LocalDate.of(2000, 1, 1);
+    private static final int ANIMAL_VISIT_LIST_SIZE = 2;
 
     @Test
     void animal_name_is_jerry() {

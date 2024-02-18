@@ -10,8 +10,8 @@ import java.util.logging.Logger;
 
 public class ConnectionManager {
 
-    private static Connection connection;
     private static final Logger LOGGER = Logger.getLogger(ConnectionManager.class.getName());
+    private static Connection connection;
 
 
     private ConnectionManager() {

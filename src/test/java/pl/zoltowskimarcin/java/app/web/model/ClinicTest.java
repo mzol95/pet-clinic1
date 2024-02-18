@@ -16,7 +16,7 @@ class ClinicTest {
         Doctor doctor1 = new Doctor("DoctorName1", "DoctorSurname1", null);
         Doctor doctor2 = new Doctor("DoctorName2", "DoctorSurname2", null);
         //when
-        Set<Doctor> doctorSet = Set.of(doctor1,doctor2);
+        Set<Doctor> doctorSet = Set.of(doctor1, doctor2);
         clinic.setDoctorSet(doctorSet);
         int actualDoctorSetSize = clinic.getDoctorSet().size();
 

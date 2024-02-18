@@ -50,7 +50,7 @@ class ConnectionManagerTest {
         }
 
         //then
-        Assertions.assertEquals(true, isClosed);
+        Assertions.assertTrue(isClosed);
 
     }
 }
