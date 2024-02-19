@@ -1,10 +1,11 @@
 package pl.zoltowskimarcin.java.app.web.model;
 
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
-
+@Tag("plain")
 class DoctorTest {
 
     public static int DOCTOR_VISIT_LIST_SIZE = 2;

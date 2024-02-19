@@ -1,8 +1,9 @@
 package pl.zoltowskimarcin.java.app.utils;
 
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
-
+@Tag("plain")
 class PropertyManagerTest {
 
     public static final String JDBC_URL_FROM_JDBC_PROPERTIES = "dataSource.jdbcUrl";

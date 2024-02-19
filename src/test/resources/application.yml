@@ -1,6 +1,6 @@
 spring:
   liquibase:
-    change-log: classpath:/db/changelog/master-test.xml
+    change-log: classpath:/db_test/changelog/master.xml
   datasource:
     url: jdbc:h2:mem:test
     username: sa
@@ -9,4 +9,4 @@ spring:
   jpa:
     database-platform: org.hibernate.dialect.H2Dialect
     hibernate:
-      ddl-auto: create-drop
+      ddl-auto: validate

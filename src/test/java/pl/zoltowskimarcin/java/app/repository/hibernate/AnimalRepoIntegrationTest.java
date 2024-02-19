@@ -1,14 +1,10 @@
 package pl.zoltowskimarcin.java.app.repository.hibernate;
 
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-import org.springframework.boot.test.context.SpringBootTest;
+import org.junit.jupiter.api.*;
 import pl.zoltowskimarcin.java.app.exceptions.FailedQueryExecutionException;
 import pl.zoltowskimarcin.java.app.exceptions.animal.*;
 import pl.zoltowskimarcin.java.app.repository.jdbc.ConnectionManager;
-import pl.zoltowskimarcin.java.app.utils.JdbcConstants;
+import pl.zoltowskimarcin.java.app.sql.JdbcTestConstants;
 import pl.zoltowskimarcin.java.app.web.model.Animal;
 
 import java.sql.Connection;
@@ -16,7 +12,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.time.LocalDate;
 
-
+@Tag("plain")
 class AnimalRepoIntegrationTest {
     private static final long FIRST_ANIMAL_ID_1 = 1L;
     private static final LocalDate ANIMAL_BIRTHDAY_01_01_2000 = LocalDate.of(2000, 1, 1);
@@ -26,23 +22,23 @@ class AnimalRepoIntegrationTest {
 
     @BeforeEach
     void setUp() throws FailedQueryExecutionException {
-
         try (Connection connection = ConnectionManager.getConnection();
              Statement statement = connection.createStatement()) {
-            statement.execute(JdbcConstants.CUSTOM_SEQUENCER);
-            statement.execute(JdbcConstants.CREATE_ANIMAL_TABLE_QUERY);
+            statement.execute(JdbcTestConstants.CUSTOM_SEQUENCER_WITH_PREVIOUS_DROP);
+            statement.execute(JdbcTestConstants.CREATE_ANIMAL_TABLE_QUERY_WITH_PREVIOUS_DROP);
         } catch (SQLException e) {
             e.printStackTrace();
             throw new FailedQueryExecutionException();
         }
     }
 
-    @AfterEach
-    void tearDown() throws FailedQueryExecutionException {
+
+    @AfterAll
+    static void tearDown() throws FailedQueryExecutionException {
         try (Connection connection = ConnectionManager.getConnection();
              Statement statement = connection.createStatement()) {
-            statement.execute(JdbcConstants.ANIMAL_DROP_TABLE_QUERY);
-            statement.execute(JdbcConstants.ANIMAL_DROP_SEQ_QUERY);
+            statement.execute(JdbcTestConstants.ANIMAL_DROP_TABLE_QUERY);
+            statement.execute(JdbcTestConstants.ANIMAL_DROP_SEQ_QUERY);
         } catch (SQLException e) {
             e.printStackTrace();
             throw new FailedQueryExecutionException();

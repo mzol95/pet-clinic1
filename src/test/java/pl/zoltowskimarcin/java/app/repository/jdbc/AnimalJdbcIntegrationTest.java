@@ -1,11 +1,8 @@
 package pl.zoltowskimarcin.java.app.repository.jdbc;
 
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 import pl.zoltowskimarcin.java.app.exceptions.animal.AnimalNotFoundException;
-import pl.zoltowskimarcin.java.app.utils.JdbcConstants;
+import pl.zoltowskimarcin.java.app.sql.JdbcTestConstants;
 import pl.zoltowskimarcin.java.app.web.model.Animal;
 
 import java.sql.Connection;
@@ -14,6 +11,7 @@ import java.sql.Statement;
 import java.time.LocalDate;
 import java.util.Optional;
 
+@Tag("plain")
 class AnimalJdbcIntegrationTest {
 
     private static final String ANIMAL_NAME = "Jerry";
@@ -27,18 +25,18 @@ class AnimalJdbcIntegrationTest {
     public void setUp() throws SQLException {
         try (Connection connection = ConnectionManager.getConnection();
              Statement statement = connection.createStatement()) {
-            statement.execute(JdbcConstants.CUSTOM_SEQUENCER);
-            statement.execute(JdbcConstants.CREATE_ANIMAL_TABLE_QUERY);
+            statement.execute(JdbcTestConstants.CUSTOM_SEQUENCER_WITH_PREVIOUS_DROP);
+            statement.execute(JdbcTestConstants.CREATE_ANIMAL_TABLE_QUERY_WITH_PREVIOUS_DROP);
         }
 
     }
 
-    @AfterEach
-    public void tearDown() {
+    @AfterAll
+    public static void tearDown() {
         try (Connection connection = ConnectionManager.getConnection();
              Statement statement = connection.createStatement()) {
-            statement.execute(JdbcConstants.ANIMAL_DROP_TABLE_QUERY);
-            statement.execute(JdbcConstants.ANIMAL_DROP_SEQ_QUERY);
+            statement.execute(JdbcTestConstants.ANIMAL_DROP_TABLE_QUERY);
+            statement.execute(JdbcTestConstants.ANIMAL_DROP_SEQ_QUERY);
         } catch (SQLException e) {
             e.printStackTrace();
         }

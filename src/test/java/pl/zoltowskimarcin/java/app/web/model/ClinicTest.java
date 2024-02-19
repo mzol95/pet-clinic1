@@ -1,10 +1,11 @@
 package pl.zoltowskimarcin.java.app.web.model;
 
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 
 import java.util.Set;
-
+@Tag("plain")
 class ClinicTest {
 
     public static int CLINIC_DOCTORS_NUMBER = 2;

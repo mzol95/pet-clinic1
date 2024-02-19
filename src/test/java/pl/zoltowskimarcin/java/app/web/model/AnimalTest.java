@@ -2,10 +2,11 @@ package pl.zoltowskimarcin.java.app.web.model;
 
 
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 
 import java.time.LocalDate;
-
+@Tag("plain")
 class AnimalTest {
 
     private static final String ANIMAL_POJO_NAME_JERRY = "Jerry";

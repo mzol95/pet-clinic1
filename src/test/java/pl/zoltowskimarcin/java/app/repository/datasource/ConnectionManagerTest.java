@@ -2,13 +2,14 @@ package pl.zoltowskimarcin.java.app.repository.datasource;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import pl.zoltowskimarcin.java.app.exceptions.FailedQueryExecutionException;
 import pl.zoltowskimarcin.java.app.repository.jdbc.ConnectionManager;
 
 import java.sql.Connection;
 import java.sql.SQLException;
-
+@Tag("plain")
 class ConnectionManagerTest {
 
     private static Connection connection;
