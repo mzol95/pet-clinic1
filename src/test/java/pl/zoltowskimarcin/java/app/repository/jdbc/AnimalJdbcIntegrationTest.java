@@ -20,17 +20,6 @@ class AnimalJdbcIntegrationTest {
     private static final LocalDate UPDATE_ANIMAL_BIRTH_DATE = LocalDate.of(3000, 2, 2);
     private static final long ANIMAL_ID_1 = 1L;
 
-
-    @BeforeEach
-    public void setUp() throws SQLException {
-        try (Connection connection = ConnectionManager.getConnection();
-             Statement statement = connection.createStatement()) {
-            statement.execute(JdbcTestConstants.CUSTOM_SEQUENCER_WITH_PREVIOUS_DROP);
-            statement.execute(JdbcTestConstants.CREATE_ANIMAL_TABLE_QUERY_WITH_PREVIOUS_DROP);
-        }
-
-    }
-
     @AfterAll
     public static void tearDown() {
         try (Connection connection = ConnectionManager.getConnection();
@@ -42,6 +31,15 @@ class AnimalJdbcIntegrationTest {
         }
     }
 
+    @BeforeEach
+    public void setUp() throws SQLException {
+        try (Connection connection = ConnectionManager.getConnection();
+             Statement statement = connection.createStatement()) {
+            statement.execute(JdbcTestConstants.CUSTOM_SEQUENCER_WITH_PREVIOUS_DROP);
+            statement.execute(JdbcTestConstants.CREATE_ANIMAL_TABLE_QUERY_WITH_PREVIOUS_DROP);
+        }
+
+    }
 
     @Test
     void read() throws AnimalNotFoundException {

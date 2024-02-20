@@ -3,6 +3,7 @@ package pl.zoltowskimarcin.java.app.utils;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
+
 @Tag("plain")
 class PropertyManagerTest {
 

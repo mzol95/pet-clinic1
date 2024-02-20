@@ -1,6 +1,7 @@
 spring:
   liquibase:
     change-log: classpath:/db_test/changelog/master.xml
+    enabled: false
   datasource:
     url: jdbc:h2:mem:test
     username: sa
@@ -9,4 +10,4 @@ spring:
   jpa:
     database-platform: org.hibernate.dialect.H2Dialect
     hibernate:
-      ddl-auto: validate
+      ddl-auto: none

@@ -9,6 +9,7 @@ import pl.zoltowskimarcin.java.app.repository.jdbc.DataSource;
 
 import java.sql.Connection;
 import java.sql.SQLException;
+
 @Tag("plain")
 class DataSourceTest {
 

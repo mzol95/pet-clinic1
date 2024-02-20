@@ -15,17 +15,6 @@ class AnimalJdbcTest {
     private static final String ANIMAL_NAME = "Dog";
     private static final LocalDate ANIMAL_BIRTH_DATE = LocalDate.of(2000, 1, 1);
 
-
-    @BeforeEach
-    public void setUp() throws SQLException {
-        try (Connection connection = ConnectionManager.getConnection();
-             Statement statement = connection.createStatement()) {
-            statement.execute(JdbcTestConstants.CUSTOM_SEQUENCER_WITH_PREVIOUS_DROP);
-            statement.execute(JdbcTestConstants.CREATE_ANIMAL_TABLE_QUERY_WITH_PREVIOUS_DROP);
-        }
-
-    }
-
     @AfterAll
     public static void tearDown() {
         try (Connection connection = ConnectionManager.getConnection();
@@ -35,6 +24,16 @@ class AnimalJdbcTest {
         } catch (SQLException e) {
             e.printStackTrace();
         }
+    }
+
+    @BeforeEach
+    public void setUp() throws SQLException {
+        try (Connection connection = ConnectionManager.getConnection();
+             Statement statement = connection.createStatement()) {
+            statement.execute(JdbcTestConstants.CUSTOM_SEQUENCER_WITH_PREVIOUS_DROP);
+            statement.execute(JdbcTestConstants.CREATE_ANIMAL_TABLE_QUERY_WITH_PREVIOUS_DROP);
+        }
+
     }
 
     @Test

@@ -98,7 +98,8 @@
                     <execution>
                         <id>default-test</id>
                         <configuration>
-                            <skip>true</skip>
+                            <excludedGroups>plain,springboot</excludedGroups>
+<!--                            <skip>true</skip>-->
                         </configuration>
                     </execution>
                     <execution>

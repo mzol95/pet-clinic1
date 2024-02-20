@@ -1,8 +1,9 @@
 package pl.zoltowskimarcin.java.app.service;
 
 import org.junit.jupiter.api.*;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
 import pl.zoltowskimarcin.java.app.exceptions.animal.AnimalCreateFaultException;
-import pl.zoltowskimarcin.java.app.repository.jdbc.AnimalJdbc;
 import pl.zoltowskimarcin.java.app.repository.jdbc.ConnectionManager;
 import pl.zoltowskimarcin.java.app.sql.JdbcTestConstants;
 import pl.zoltowskimarcin.java.app.web.model.Animal;
@@ -12,12 +13,16 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.time.LocalDate;
 
-@Tag("plain")
-class AnimalServiceTest {
+@SpringBootTest
+@Tag("springboot")
+class AnimalServiceSpringTest {
 
     private static final long FIRST_ANIMAL_ID_1 = 1L;
     private static final LocalDate ANIMAL_BIRTHDAY_01_01_2000 = LocalDate.of(2000, 1, 1);
     private static final String ANIMAL_ENTITY_NAME_JERRY = "Jerry";
+
+    @Autowired
+    private AnimalService animalService;
 
     @AfterAll
     public static void tearDown() {
@@ -43,8 +48,6 @@ class AnimalServiceTest {
     @Test
     void create() throws AnimalCreateFaultException {
         //given
-        AnimalJdbc animalJdbc = new AnimalJdbc();
-        AnimalService animalService = new AnimalService(animalJdbc);
         Animal animal = new Animal(ANIMAL_ENTITY_NAME_JERRY, ANIMAL_BIRTHDAY_01_01_2000);
 
         //when

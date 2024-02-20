@@ -4,7 +4,6 @@ import org.junit.jupiter.api.*;
 import pl.zoltowskimarcin.java.app.exceptions.FailedQueryExecutionException;
 import pl.zoltowskimarcin.java.app.exceptions.animal.AnimalCreateFaultException;
 import pl.zoltowskimarcin.java.app.repository.jdbc.ConnectionManager;
-
 import pl.zoltowskimarcin.java.app.sql.JdbcTestConstants;
 import pl.zoltowskimarcin.java.app.web.model.Animal;
 
@@ -19,6 +18,18 @@ class AnimalRepoTest {
     private static final LocalDate ANIMAL_BIRTHDAY_01_01_2000 = LocalDate.of(2000, 1, 1);
     private static final String ANIMAL_ENTITY_NAME_JERRY = "Jerry";
 
+    @AfterAll
+    static void tearDown() throws FailedQueryExecutionException {
+        try (Connection connection = ConnectionManager.getConnection();
+             Statement statement = connection.createStatement()) {
+            statement.execute(JdbcTestConstants.ANIMAL_DROP_TABLE_QUERY);
+            statement.execute(JdbcTestConstants.ANIMAL_DROP_SEQ_QUERY);
+        } catch (SQLException e) {
+            e.printStackTrace();
+            throw new FailedQueryExecutionException();
+        }
+    }
+
     @BeforeEach
     void setUp() throws FailedQueryExecutionException {
 
@@ -26,18 +37,6 @@ class AnimalRepoTest {
              Statement statement = connection.createStatement()) {
             statement.execute(JdbcTestConstants.CUSTOM_SEQUENCER_WITH_PREVIOUS_DROP);
             statement.execute(JdbcTestConstants.CREATE_ANIMAL_TABLE_QUERY_WITH_PREVIOUS_DROP);
-        } catch (SQLException e) {
-            e.printStackTrace();
-            throw new FailedQueryExecutionException();
-        }
-    }
-
-    @AfterAll
-    static void tearDown() throws FailedQueryExecutionException {
-        try (Connection connection = ConnectionManager.getConnection();
-             Statement statement = connection.createStatement()) {
-            statement.execute(JdbcTestConstants.ANIMAL_DROP_TABLE_QUERY);
-            statement.execute(JdbcTestConstants.ANIMAL_DROP_SEQ_QUERY);
         } catch (SQLException e) {
             e.printStackTrace();
             throw new FailedQueryExecutionException();

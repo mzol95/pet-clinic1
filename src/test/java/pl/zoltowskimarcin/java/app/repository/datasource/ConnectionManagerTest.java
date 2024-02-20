@@ -9,6 +9,7 @@ import pl.zoltowskimarcin.java.app.repository.jdbc.ConnectionManager;
 
 import java.sql.Connection;
 import java.sql.SQLException;
+
 @Tag("plain")
 class ConnectionManagerTest {
 

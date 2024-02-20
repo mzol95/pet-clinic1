@@ -20,19 +20,6 @@ class AnimalRepoIntegrationTest {
     private static final String ANIMAL_ENTITY_NAME_JERRY = "Jerry";
     private static final String ANIMAL_ENTITY_NAME_UPDATED_JERRY = "UpdatedJerry";
 
-    @BeforeEach
-    void setUp() throws FailedQueryExecutionException {
-        try (Connection connection = ConnectionManager.getConnection();
-             Statement statement = connection.createStatement()) {
-            statement.execute(JdbcTestConstants.CUSTOM_SEQUENCER_WITH_PREVIOUS_DROP);
-            statement.execute(JdbcTestConstants.CREATE_ANIMAL_TABLE_QUERY_WITH_PREVIOUS_DROP);
-        } catch (SQLException e) {
-            e.printStackTrace();
-            throw new FailedQueryExecutionException();
-        }
-    }
-
-
     @AfterAll
     static void tearDown() throws FailedQueryExecutionException {
         try (Connection connection = ConnectionManager.getConnection();
@@ -45,6 +32,17 @@ class AnimalRepoIntegrationTest {
         }
     }
 
+    @BeforeEach
+    void setUp() throws FailedQueryExecutionException {
+        try (Connection connection = ConnectionManager.getConnection();
+             Statement statement = connection.createStatement()) {
+            statement.execute(JdbcTestConstants.CUSTOM_SEQUENCER_WITH_PREVIOUS_DROP);
+            statement.execute(JdbcTestConstants.CREATE_ANIMAL_TABLE_QUERY_WITH_PREVIOUS_DROP);
+        } catch (SQLException e) {
+            e.printStackTrace();
+            throw new FailedQueryExecutionException();
+        }
+    }
 
     @Test
     void read() throws AnimalNotFoundException, AnimalCreateFaultException, AnimalReadFaultException {

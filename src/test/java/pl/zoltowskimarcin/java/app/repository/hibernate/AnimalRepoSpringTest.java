@@ -1,13 +1,17 @@
 package pl.zoltowskimarcin.java.app.repository.hibernate;
 
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.Tag;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import pl.zoltowskimarcin.java.app.exceptions.FailedQueryExecutionException;
 import pl.zoltowskimarcin.java.app.exceptions.animal.AnimalCreateFaultException;
+import pl.zoltowskimarcin.java.app.repository.jdbc.ConnectionManager;
+import pl.zoltowskimarcin.java.app.sql.JdbcTestConstants;
 import pl.zoltowskimarcin.java.app.web.model.Animal;
 
+import java.sql.Connection;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.time.LocalDate;
 
 @SpringBootTest
@@ -19,6 +23,30 @@ class AnimalRepoSpringTest {
 
     @Autowired
     private AnimalRepo animalRepo;
+
+    @AfterAll
+    static void tearDown() throws FailedQueryExecutionException {
+        try (Connection connection = ConnectionManager.getConnection();
+             Statement statement = connection.createStatement()) {
+            statement.execute(JdbcTestConstants.ANIMAL_DROP_TABLE_QUERY);
+            statement.execute(JdbcTestConstants.ANIMAL_DROP_SEQ_QUERY);
+        } catch (SQLException e) {
+            e.printStackTrace();
+            throw new FailedQueryExecutionException();
+        }
+    }
+
+    @BeforeEach
+    void setUp() throws FailedQueryExecutionException {
+        try (Connection connection = ConnectionManager.getConnection();
+             Statement statement = connection.createStatement()) {
+            statement.execute(JdbcTestConstants.CUSTOM_SEQUENCER_WITH_PREVIOUS_DROP);
+            statement.execute(JdbcTestConstants.CREATE_ANIMAL_TABLE_QUERY_WITH_PREVIOUS_DROP);
+        } catch (SQLException e) {
+            e.printStackTrace();
+            throw new FailedQueryExecutionException();
+        }
+    }
 
     @Test
     void create() throws AnimalCreateFaultException {
